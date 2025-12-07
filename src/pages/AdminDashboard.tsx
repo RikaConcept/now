@@ -350,23 +350,16 @@ function ProductForm({ onSuccess, editingProduct }: { onSuccess: () => void; edi
   const uploadImage = async (productId: string): Promise<string | null> => {
     if (!imageFile) return null;
 
-    const fileExt = imageFile.name.split('.').pop();
-    const fileName = `products/${productId}.${fileExt}`;
-
-    const { error } = await supabase.storage
-      .from('product-images')
-      .upload(fileName, imageFile, { upsert: true });
-
-    if (error) {
-      console.error('Erreur upload:', error);
-      return null;
+    try {
+      const response = await api.uploadFile(imageFile);
+      if (response.success && response.data?.url) {
+        return response.data.url;
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('product-images')
-      .getPublicUrl(fileName);
-
-    return publicUrl;
+    
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
