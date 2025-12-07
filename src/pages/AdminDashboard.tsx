@@ -1080,17 +1080,25 @@ function LevelEditForm({ level, onSuccess, onCancel }: { level: any; onSuccess: 
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('membership_levels')
-        .update({
+      const API_URL = import.meta.env.VITE_API_URL || 'https://arnowconcept.com/api';
+      const response = await fetch(`${API_URL}/membership-levels?id=${level.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        },
+        body: JSON.stringify({
           minimum_purchases: parseFloat(formData.minimum_purchases),
           discount_percentage: parseFloat(formData.discount_percentage),
           benefits: formData.benefits,
         })
-        .eq('id', level.id);
+      });
 
-      if (error) throw error;
-      onSuccess();
+      if (response.ok) {
+        onSuccess();
+      } else {
+        throw new Error('Failed to update level');
+      }
     } catch (error) {
       alert('Erreur lors de la modification du niveau');
     } finally {
