@@ -712,12 +712,14 @@ function AdminOrders() {
   }, []);
 
   const loadOrders = async () => {
-    const { data } = await supabase
-      .from('orders')
-      .select('*, members(email, code)')
-      .order('created_at', { ascending: false });
-
-    if (data) setOrders(data);
+    try {
+      const response = await api.getAllOrders({ limit: 100 });
+      if (response.success && response.data) {
+        setOrders(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading orders:', error);
+    }
     setLoading(false);
   };
 
