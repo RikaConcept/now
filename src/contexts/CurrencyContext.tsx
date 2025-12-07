@@ -25,22 +25,15 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     setLoading(true);
 
     if (user) {
-      const { data: memberData } = await supabase
-        .from('members')
-        .select(`
-          locality_id,
-          localities (
-            country_id,
-            countries (
-              currency_code
-            )
-          )
-        `)
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (memberData?.localities?.countries?.currency_code) {
-        setCurrencyState(memberData.localities.countries.currency_code);
+      try {
+        const response = await api.getMember();
+        if (response.success && response.data) {
+          // For now, use EUR as default
+          // TODO: Add currency detection based on locality/country
+          setCurrencyState('EUR');
+        }
+      } catch (error) {
+        console.error('Error loading currency:', error);
       }
     } else {
       const savedCurrency = localStorage.getItem('preferred_currency');
