@@ -58,3 +58,7 @@ deploy_*/
 
 # Supabase (no longer needed - migrated to MySQL)
 supabase/
+-e 
+# Environment files
+*.env
+*.env.*
