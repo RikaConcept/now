@@ -78,23 +78,16 @@ export default function ProductRequest() {
   const uploadImage = async (productRequestId: string): Promise<string | null> => {
     if (!imageFile) return null;
 
-    const fileExt = imageFile.name.split('.').pop();
-    const fileName = `product-requests/${productRequestId}.${fileExt}`;
-
-    const { error } = await supabase.storage
-      .from('product-images')
-      .upload(fileName, imageFile);
-
-    if (error) {
-      console.error('Erreur upload:', error);
-      return null;
+    try {
+      const response = await api.uploadFile(imageFile);
+      if (response.success && response.data?.url) {
+        return response.data.url;
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('product-images')
-      .getPublicUrl(fileName);
-
-    return publicUrl;
+    
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
