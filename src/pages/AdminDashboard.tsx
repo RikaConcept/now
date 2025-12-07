@@ -44,27 +44,19 @@ export default function AdminDashboard() {
   };
 
   const loadStats = async () => {
-    const { data: memberData } = await supabase
-      .from('members')
-      .select('id', { count: 'exact' });
-
-    const { data: orderData } = await supabase
-      .from('orders')
-      .select('amount', { count: 'exact' })
-      .eq('status', 'paid');
-
-    const { data: requestData } = await supabase
-      .from('product_requests')
-      .select('id', { count: 'exact' });
-
-    const totalRevenue = orderData?.reduce((sum, order) => sum + (order.amount || 0), 0) || 0;
-
-    setStats({
-      totalMembers: memberData?.length || 0,
-      totalOrders: orderData?.length || 0,
-      totalProductRequests: requestData?.length || 0,
-      totalRevenue
-    });
+    try {
+      const response = await api.getAdminStats();
+      if (response.success && response.data) {
+        setStats({
+          totalMembers: response.data.total_members || 0,
+          totalOrders: response.data.total_orders || 0,
+          totalProductRequests: response.data.pending_requests || 0,
+          totalRevenue: response.data.total_revenue || 0
+        });
+      }
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    }
   };
 
   const handleSignOut = async () => {
