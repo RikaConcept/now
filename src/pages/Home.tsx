@@ -234,14 +234,14 @@ export default function Home() {
                       <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
                         {shop.category}
                       </span>
-                      <a 
+                      <a
                         href={shop.website_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-700 font-medium inline-flex items-center"
                       >
                         Visiter
-                        <ArrowRight className="ml-1 h-4 w-4" />
+                        <Icons.ArrowRight className="ml-1 h-4 w-4" />
                       </a>
                     </div>
                   </div>
