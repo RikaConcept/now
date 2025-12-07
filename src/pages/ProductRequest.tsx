@@ -31,14 +31,14 @@ export default function ProductRequest() {
   const checkMemberStatus = async () => {
     if (!user) return;
 
-    const { data } = await supabase
-      .from('members')
-      .select('status')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (data && data.status === 'active') {
-      setIsMember(true);
+    try {
+      const response = await api.getMember();
+      if (response.success && response.data?.status === 'active') {
+        setIsMember(true);
+      }
+    } catch (error) {
+      // Member doesn't exist or error
+      setIsMember(false);
     }
   };
 
