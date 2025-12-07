@@ -1510,23 +1510,16 @@ function PartnerShopForm({ onSuccess, editingShop }: { onSuccess: () => void; ed
   const uploadImage = async (shopId: string): Promise<string | null> => {
     if (!imageFile) return null;
 
-    const fileExt = imageFile.name.split('.').pop();
-    const fileName = `partner-shops/${shopId}.${fileExt}`;
-
-    const { error } = await supabase.storage
-      .from('product-images')
-      .upload(fileName, imageFile, { upsert: true });
-
-    if (error) {
-      console.error('Erreur upload:', error);
-      return null;
+    try {
+      const response = await api.uploadFile(imageFile);
+      if (response.success && response.data?.url) {
+        return response.data.url;
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('product-images')
-      .getPublicUrl(fileName);
-
-    return publicUrl;
+    
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1537,8 +1530,7 @@ function PartnerShopForm({ onSuccess, editingShop }: { onSuccess: () => void; ed
       let finalLogoUrl = formData.logo_url;
 
       if (imageFile) {
-        const tempId = editingShop?.id || crypto.randomUUID();
-        const uploadedUrl = await uploadImage(tempId);
+        const uploadedUrl = await uploadImage('temp');
         if (uploadedUrl) {
           finalLogoUrl = uploadedUrl;
         }
@@ -1553,17 +1545,30 @@ function PartnerShopForm({ onSuccess, editingShop }: { onSuccess: () => void; ed
         is_active: formData.is_active
       };
 
+      const API_URL = import.meta.env.VITE_API_URL || 'https://arnowconcept.com/api';
+
       if (editingShop) {
-        const { error } = await supabase
-          .from('partner_shops')
-          .update(shopData)
-          .eq('id', editingShop.id);
-        if (error) throw error;
+        const response = await fetch(`${API_URL}/partner-shops?id=${editingShop.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          },
+          body: JSON.stringify(shopData)
+        });
+        
+        if (!response.ok) throw new Error('Update failed');
       } else {
-        const { error } = await supabase
-          .from('partner_shops')
-          .insert(shopData);
-        if (error) throw error;
+        const response = await fetch(`${API_URL}/partner-shops`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          },
+          body: JSON.stringify(shopData)
+        });
+        
+        if (!response.ok) throw new Error('Create failed');
       }
 
       onSuccess();
