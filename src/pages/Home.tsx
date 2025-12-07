@@ -66,17 +66,21 @@ export default function Home() {
   };
 
   const loadData = async () => {
-    const [shopsData, settingsData] = await Promise.all([
-      supabase.from('partner_shops').select('*').limit(6),
-      supabase.from('site_settings').select('*').eq('id', 'default').maybeSingle()
-    ]);
+    try {
+      const [shopsResponse, settingsResponse] = await Promise.all([
+        api.getPartnerShops(),
+        api.getSiteSettings()
+      ]);
 
-    if (shopsData.data) {
-      setPartnerShops(shopsData.data);
-    }
+      if (shopsResponse.success && shopsResponse.data) {
+        setPartnerShops(shopsResponse.data.slice(0, 6));
+      }
 
-    if (settingsData.data) {
-      setSettings(settingsData.data);
+      if (settingsResponse.success && settingsResponse.data) {
+        setSettings(settingsResponse.data);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
     }
 
     setLoading(false);
