@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Store, ArrowRight, Loader2 } from 'lucide-react';
 
 interface PartnerShop {
@@ -22,13 +22,13 @@ export default function Partners() {
   }, []);
 
   const loadPartnerShops = async () => {
-    const { data } = await supabase
-      .from('partner_shops')
-      .select('*')
-      .order('name');
-
-    if (data) {
-      setPartnerShops(data);
+    try {
+      const response = await api.getPartnerShops();
+      if (response.success && response.data) {
+        setPartnerShops(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading partner shops:', error);
     }
     setLoading(false);
   };
@@ -110,11 +110,13 @@ export default function Partners() {
                       key={shop.id}
                       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow"
                     >
-                      <img
-                        src={shop.image_url}
-                        alt={shop.name}
-                        className="w-full h-48 object-cover"
-                      />
+                      {shop.image_url && (
+                        <img
+                          src={shop.image_url}
+                          alt={shop.name}
+                          className="w-full h-48 object-cover"
+                        />
+                      )}
                       <div className="p-6">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="text-xl font-semibold text-gray-900">{shop.name}</h3>
@@ -123,15 +125,17 @@ export default function Partners() {
                           </span>
                         </div>
                         <p className="text-gray-600 mb-4 line-clamp-3">{shop.description}</p>
-                        <a
-                          href={shop.website_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
-                        >
-                          Visiter le site
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </a>
+                        {shop.website_url && (
+                          <a
+                            href={shop.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            Visiter le site
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </a>
+                        )}
                       </div>
                     </div>
                   ))}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { ShoppingCart, CreditCard, CheckCircle, ExternalLink } from 'lucide-react';
 
@@ -38,32 +38,33 @@ export default function Shop() {
   }, [user]);
 
   const loadProducts = async () => {
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('is_active', true)
-      .order('price', { ascending: true });
-
-    if (data) {
-      setProducts(data);
-      if (data.length > 0) {
-        setSelectedProduct(data[0]);
-        setAmount(data[0].price);
+    try {
+      const response = await api.getProducts();
+      if (response.success && response.data) {
+        setProducts(response.data);
+        if (response.data.length > 0) {
+          setSelectedProduct(response.data[0]);
+          setAmount(response.data[0].price);
+        }
       }
+    } catch (error) {
+      console.error('Error loading products:', error);
     }
   };
 
   const loadMember = async () => {
     if (!user) return;
 
-    const { data } = await supabase
-      .from('members')
-      .select('code, status')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (data) {
-      setMember(data);
+    try {
+      const response = await api.getMember();
+      if (response.success && response.data) {
+        setMember({
+          code: response.data.code,
+          status: response.data.status
+        });
+      }
+    } catch (error) {
+      console.error('Error loading member:', error);
     }
   };
 
@@ -73,55 +74,18 @@ export default function Shop() {
     setLoading(true);
 
     try {
-      const { data: orderData, error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          member_id: user.id,
-          amount,
-          status: 'paid',
-          payment_method: paymentMethod
-        })
-        .select()
-        .single();
-
-      if (orderError) throw orderError;
-
-      if (member.status === 'pending') {
-        await supabase
-          .from('members')
-          .update({
-            status: 'active',
-            activated_at: new Date().toISOString()
-          })
-          .eq('id', user.id);
-
-        const { data: shopsData } = await supabase
-          .from('partner_shops')
-          .select('name, discount_percentage')
-          .eq('is_active', true);
-
-        await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: user.email,
-            type: 'member_activated',
-            data: {
-              partnerShops: shopsData?.map(shop => ({
-                name: shop.name,
-                discount: shop.discount_percentage
-              })) || []
-            }
-          })
-        });
+      const response = await api.createOrder(amount, paymentMethod);
+      
+      if (response.success) {
+        // Update order status to paid (for simple payments)
+        // In real scenario, this would be done after actual payment
+        await api.updateOrderStatus(response.data.order_id, 'paid');
+        setOrderComplete(true);
+      } else {
+        throw new Error('Order creation failed');
       }
-
-      setOrderComplete(true);
     } catch (error) {
-      console.error('Erreur de paiement:', error);
+      console.error('Payment error:', error);
       alert('Erreur lors du paiement. Veuillez réessayer.');
     } finally {
       setLoading(false);
@@ -248,7 +212,7 @@ export default function Shop() {
                   <p className="text-xl font-bold text-blue-600">{member.code}</p>
                   <p className="text-sm text-gray-600 mt-1">
                     Statut: <span className={member.status === 'active' ? 'text-green-600' : 'text-orange-600'}>
-                      {member.status === 'active' ? 'Actif' : 'En attente d\'activation'}
+                      {member.status === 'active' ? 'Actif' : "En attente d'activation"}
                     </span>
                   </p>
                 </div>
