@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { LayoutDashboard, Package, Users, TrendingUp, LogOut, Settings, Store, Edit2, Trash2, ShoppingBag, Globe } from 'lucide-react';
 import ImageUpload from '../components/ImageUpload';
