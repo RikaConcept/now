@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Settings, Save, AlertCircle, CheckCircle } from 'lucide-react';
 import ImageUpload from '../components/ImageUpload';
 
