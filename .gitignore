@@ -1,3 +1,4 @@
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -6,11 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+package-lock.json
+
+# Build output
 dist
 dist-ssr
 *.local
 
+# IDE
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -20,8 +26,35 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files (keep .env.production and .env.example)
 .env
--e 
-# Environment files
-*.env
-*.env.*
+.env.local
+.env.development.local
+.env.test.local
+
+# Uploaded files (keep the directory but ignore content)
+uploads/*
+!uploads/.gitkeep
+!uploads/README.md
+
+# Backup files
+*.bak
+*.backup
+*_old.*
+*.old
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Deploy archives
+deploy_*.tar.gz
+deploy_*/
+
+# Supabase (no longer needed)
+supabase/.env
