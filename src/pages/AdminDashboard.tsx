@@ -787,18 +787,21 @@ function AdminLocations() {
   }, []);
 
   const loadData = async () => {
-    const { data: countryData } = await supabase
-      .from('countries')
-      .select('*')
-      .order('name', { ascending: true });
+    try {
+      const [countriesResponse, localitiesResponse] = await Promise.all([
+        api.getCountries(),
+        api.getLocalities()
+      ]);
 
-    const { data: localityData } = await supabase
-      .from('localities')
-      .select('*, countries(name, code)')
-      .order('name', { ascending: true });
-
-    if (countryData) setCountries(countryData);
-    if (localityData) setLocalities(localityData);
+      if (countriesResponse.success && countriesResponse.data) {
+        setCountries(countriesResponse.data);
+      }
+      if (localitiesResponse.success && localitiesResponse.data) {
+        setLocalities(localitiesResponse.data);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
     setLoading(false);
   };
 
