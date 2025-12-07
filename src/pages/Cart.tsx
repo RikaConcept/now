@@ -19,8 +19,6 @@ export default function Cart() {
   const { items, removeItem, updateQuantity, clearCart, getTotalPrice, getTotalItems } = useCartStore();
   const [member, setMember] = useState<Member | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'paypal' | 'paystack'>('paystack');
-  const [mobileMoneyProvider, setMobileMoneyProvider] = useState<'mtn' | 'orange' | 'moov' | 'wave'>('orange');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
 
@@ -46,11 +44,6 @@ export default function Cart() {
 
   const handlePayment = async () => {
     if (!user || !member || items.length === 0) return;
-
-    if (paymentMethod === 'paystack' && !phoneNumber) {
-      alert('Veuillez entrer votre numéro de téléphone Mobile Money');
-      return;
-    }
 
     setLoading(true);
 
@@ -107,8 +100,6 @@ export default function Cart() {
             amount: amountInCents,
             currency: 'XOF',
             email: user.email,
-            phone: phoneNumber,
-            mobile_money_provider: mobileMoneyProvider,
             items: items.map(item => ({
               name: item.name,
               amount: Math.round(item.price * 100),
@@ -117,9 +108,7 @@ export default function Cart() {
             callback_url: `${window.location.origin}/checkout-success`,
             metadata: {
               member_id: user.id,
-              member_status: member.status,
-              mobile_money_provider: mobileMoneyProvider,
-              phone: phoneNumber
+              member_status: member.status
             }
           })
         });
@@ -342,120 +331,6 @@ export default function Cart() {
                         </div>
                       </div>
 
-                      {paymentMethod === 'paystack' && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Numéro de téléphone Mobile Money
-                            </label>
-                            <input
-                              type="tel"
-                              value={phoneNumber}
-                              onChange={(e) => setPhoneNumber(e.target.value)}
-                              placeholder="Ex: +225 07 00 00 00 00"
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                              required
-                            />
-                            <p className="text-xs text-gray-500 mt-1">
-                              Le numéro doit correspondre à votre compte Mobile Money
-                            </p>
-                          </div>
-                        </>
-                      )}
-
-                      {paymentMethod === 'paystack' && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-3">
-                            Choisissez votre service Mobile Money
-                          </label>
-                          <div className="grid grid-cols-2 gap-3">
-                            <button
-                              type="button"
-                              onClick={() => setMobileMoneyProvider('mtn')}
-                              className={`p-3 rounded-lg border-2 transition-all ${
-                                mobileMoneyProvider === 'mtn'
-                                  ? 'border-yellow-500 bg-yellow-50'
-                                  : 'border-gray-200 hover:border-gray-300'
-                              }`}
-                            >
-                              <div className="flex flex-col items-center gap-2">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                  mobileMoneyProvider === 'mtn' ? 'bg-yellow-500' : 'bg-gray-200'
-                                }`}>
-                                  <Smartphone className={`w-5 h-5 ${mobileMoneyProvider === 'mtn' ? 'text-white' : 'text-gray-400'}`} />
-                                </div>
-                                <span className={`text-sm font-medium ${mobileMoneyProvider === 'mtn' ? 'text-yellow-600' : 'text-gray-600'}`}>
-                                  MTN Money
-                                </span>
-                              </div>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => setMobileMoneyProvider('orange')}
-                              className={`p-3 rounded-lg border-2 transition-all ${
-                                mobileMoneyProvider === 'orange'
-                                  ? 'border-orange-500 bg-orange-50'
-                                  : 'border-gray-200 hover:border-gray-300'
-                              }`}
-                            >
-                              <div className="flex flex-col items-center gap-2">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                  mobileMoneyProvider === 'orange' ? 'bg-orange-500' : 'bg-gray-200'
-                                }`}>
-                                  <Smartphone className={`w-5 h-5 ${mobileMoneyProvider === 'orange' ? 'text-white' : 'text-gray-400'}`} />
-                                </div>
-                                <span className={`text-sm font-medium ${mobileMoneyProvider === 'orange' ? 'text-orange-600' : 'text-gray-600'}`}>
-                                  Orange Money
-                                </span>
-                              </div>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => setMobileMoneyProvider('moov')}
-                              className={`p-3 rounded-lg border-2 transition-all ${
-                                mobileMoneyProvider === 'moov'
-                                  ? 'border-blue-500 bg-blue-50'
-                                  : 'border-gray-200 hover:border-gray-300'
-                              }`}
-                            >
-                              <div className="flex flex-col items-center gap-2">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                  mobileMoneyProvider === 'moov' ? 'bg-blue-500' : 'bg-gray-200'
-                                }`}>
-                                  <Smartphone className={`w-5 h-5 ${mobileMoneyProvider === 'moov' ? 'text-white' : 'text-gray-400'}`} />
-                                </div>
-                                <span className={`text-sm font-medium ${mobileMoneyProvider === 'moov' ? 'text-blue-600' : 'text-gray-600'}`}>
-                                  Moov Money
-                                </span>
-                              </div>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => setMobileMoneyProvider('wave')}
-                              className={`p-3 rounded-lg border-2 transition-all ${
-                                mobileMoneyProvider === 'wave'
-                                  ? 'border-pink-500 bg-pink-50'
-                                  : 'border-gray-200 hover:border-gray-300'
-                              }`}
-                            >
-                              <div className="flex flex-col items-center gap-2">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                  mobileMoneyProvider === 'wave' ? 'bg-pink-500' : 'bg-gray-200'
-                                }`}>
-                                  <Smartphone className={`w-5 h-5 ${mobileMoneyProvider === 'wave' ? 'text-white' : 'text-gray-400'}`} />
-                                </div>
-                                <span className={`text-sm font-medium ${mobileMoneyProvider === 'wave' ? 'text-pink-600' : 'text-gray-600'}`}>
-                                  Wave
-                                </span>
-                              </div>
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
                       <div className={`rounded-lg p-4 ${
                         paymentMethod === 'paypal'
                           ? 'bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-200'
@@ -476,7 +351,7 @@ export default function Cart() {
                             <p className="text-sm text-gray-600">
                               {paymentMethod === 'paypal'
                                 ? 'Carte Visa, Mastercard ou compte PayPal'
-                                : `${mobileMoneyProvider === 'mtn' ? 'MTN Money' : mobileMoneyProvider === 'orange' ? 'Orange Money' : mobileMoneyProvider === 'moov' ? 'Moov Money' : 'Wave'}`}
+                                : 'Tous les services Mobile Money acceptés'}
                             </p>
                           </div>
                         </div>
@@ -485,7 +360,7 @@ export default function Cart() {
 
                     <button
                       onClick={handlePayment}
-                      disabled={loading || items.length === 0 || (paymentMethod === 'paystack' && !phoneNumber)}
+                      disabled={loading || items.length === 0}
                       className={`w-full text-white py-4 rounded-lg font-semibold transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl ${
                         paymentMethod === 'paypal'
                           ? 'bg-blue-600 hover:bg-blue-700'

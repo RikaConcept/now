@@ -49,26 +49,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    if (mobile_money_provider && !phone) {
-      return new Response(
-        JSON.stringify({ error: "Phone number required for Mobile Money payments" }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    const providerChannels: Record<string, string[]> = {
-      mtn: ["mobile_money"],
-      orange: ["mobile_money"],
-      moov: ["mobile_money"],
-      wave: ["mobile_money"],
-    };
-
-    const channels = mobile_money_provider
-      ? providerChannels[mobile_money_provider] || ["mobile_money", "card"]
-      : ["mobile_money", "card"];
+    const channels = ["mobile_money", "card"];
 
     const paystackResponse = await fetch(
       "https://api.paystack.co/transaction/initialize",
