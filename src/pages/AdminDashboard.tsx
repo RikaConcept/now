@@ -509,46 +509,42 @@ function AdminMembers() {
   }, []);
 
   const loadMembers = async () => {
-    const { data } = await supabase
-      .from('members')
-      .select('*, localities(name), membership_levels(name)')
-      .order('created_at', { ascending: false });
-
-    if (data) setMembers(data);
+    try {
+      const response = await api.getAllMembers({ limit: 100 });
+      if (response.success && response.data) {
+        setMembers(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading members:', error);
+    }
     setLoading(false);
   };
 
   const loadMembershipLevels = async () => {
-    const { data } = await supabase
-      .from('membership_levels')
-      .select('*')
-      .order('order', { ascending: true });
-
-    if (data) setMembershipLevels(data);
+    try {
+      const response = await api.getMembershipLevels();
+      if (response.success && response.data) {
+        setMembershipLevels(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading levels:', error);
+    }
   };
 
   const updateMemberStatus = async (memberId: string, newStatus: string) => {
-    const { error } = await supabase
-      .from('members')
-      .update({ status: newStatus })
-      .eq('id', memberId);
-
-    if (!error) {
+    try {
+      await api.updateMember({ status: newStatus });
       loadMembers();
-    } else {
+    } catch (error) {
       alert('Erreur lors de la mise à jour');
     }
   };
 
   const updateMemberLevel = async (memberId: string, newLevelId: string | null) => {
-    const { error } = await supabase
-      .from('members')
-      .update({ membership_level_id: newLevelId })
-      .eq('id', memberId);
-
-    if (!error) {
+    try {
+      await api.updateMember({ membership_level_id: newLevelId });
       loadMembers();
-    } else {
+    } catch (error) {
       alert('Erreur lors de la mise à jour');
     }
   };
