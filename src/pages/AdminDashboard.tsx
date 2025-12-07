@@ -140,7 +140,14 @@ export default function AdminDashboard() {
           </ul>
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 space-y-2">
+          <button
+            onClick={() => window.location.href = '/admin/site-settings'}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Settings className="w-5 h-5" />
+            <span>Paramètres du site</span>
+          </button>
           <button
             onClick={handleSignOut}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"

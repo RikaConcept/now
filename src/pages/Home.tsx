@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Heart, Users, ShoppingBag, Star, ArrowRight, MapPin, Phone, Mail, Globe, Zap, Shield, Award, LogOut, User } from 'lucide-react';
+import * as Icons from 'lucide-react';
 
 interface PartnerShop {
   id: string;
@@ -14,55 +14,128 @@ interface PartnerShop {
   category: string;
 }
 
+interface SiteSettings {
+  app_name: string;
+  logo_url: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  hero_title: string;
+  hero_description: string;
+  why_choose_title: string;
+  why_choose_description: string;
+  feature_1_title: string;
+  feature_1_description: string;
+  feature_1_icon: string;
+  feature_2_title: string;
+  feature_2_description: string;
+  feature_2_icon: string;
+  feature_3_title: string;
+  feature_3_description: string;
+  feature_3_icon: string;
+  stats_members: string;
+  stats_partners: string;
+  stats_satisfaction: string;
+  contact_title: string;
+  contact_description: string;
+  contact_address: string;
+  contact_phone: string;
+  contact_hours: string;
+  contact_email: string;
+  contact_support_email: string;
+  footer_description: string;
+  footer_copyright: string;
+  social_facebook: string;
+  social_twitter: string;
+  social_instagram: string;
+  social_linkedin: string;
+}
+
 export default function Home() {
   const { user, signOut } = useAuth();
   const [partnerShops, setPartnerShops] = useState<PartnerShop[]>([]);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadPartnerShops();
+    loadData();
   }, []);
 
   const handleSignOut = async () => {
     await signOut();
   };
 
-  const loadPartnerShops = async () => {
-    const { data } = await supabase
-      .from('partner_shops')
-      .select('*')
-      .limit(6);
-    
-    if (data) {
-      setPartnerShops(data);
+  const loadData = async () => {
+    const [shopsData, settingsData] = await Promise.all([
+      supabase.from('partner_shops').select('*').limit(6),
+      supabase.from('site_settings').select('*').eq('id', 'default').maybeSingle()
+    ]);
+
+    if (shopsData.data) {
+      setPartnerShops(shopsData.data);
     }
+
+    if (settingsData.data) {
+      setSettings(settingsData.data);
+    }
+
     setLoading(false);
   };
+
+  const getIcon = (iconName: string) => {
+    const Icon = (Icons as any)[iconName] || Icons.Star;
+    return Icon;
+  };
+
+  if (!settings) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  const Feature1Icon = getIcon(settings.feature_1_icon);
+  const Feature2Icon = getIcon(settings.feature_2_icon);
+  const Feature3Icon = getIcon(settings.feature_3_icon);
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-20">
+      <section
+        className="text-white py-20"
+        style={{
+          background: `linear-gradient(to bottom right, ${settings.primary_color}, ${settings.secondary_color})`
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Bienvenue chez <span className="text-yellow-300">NOW!</span>
+              {settings.hero_title.split(settings.app_name)[0]}
+              <span style={{ color: settings.accent_color }}>{settings.app_name}</span>
+              {settings.hero_title.split(settings.app_name)[1]}
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Découvrez des produits exceptionnels et bénéficiez d'avantages exclusifs 
-              chez nos partenaires de confiance
+              {settings.hero_description}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/generate-code"
-                className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition-colors inline-flex items-center justify-center"
+                className="px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center justify-center"
+                style={{
+                  backgroundColor: settings.accent_color,
+                  color: '#111827'
+                }}
               >
-                Rejoindre la communauté NOW!
-                <ArrowRight className="ml-2 h-5 w-5" />
+                Rejoindre la communauté {settings.app_name}
+                <Icons.ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-              <a 
-                href="#partners" 
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-colors"
+              <a
+                href="#partners"
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white transition-colors"
+                style={{
+                  ':hover': { color: settings.primary_color }
+                }}
               >
                 Découvrir nos partenaires
               </a>
@@ -76,41 +149,41 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Pourquoi choisir NOW!Concept ?
+              {settings.why_choose_title}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Une plateforme unique qui vous connecte aux meilleurs produits et services
+              {settings.why_choose_description}
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-blue-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: `${settings.primary_color}20` }}>
+                <Feature1Icon className="h-8 w-8" style={{ color: settings.primary_color }} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Accès instantané</h3>
+              <h3 className="text-xl font-semibold mb-2">{settings.feature_1_title}</h3>
               <p className="text-gray-600">
-                Découvrez immédiatement tous nos produits et services partenaires
+                {settings.feature_1_description}
               </p>
             </div>
-            
+
             <div className="text-center p-6">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-green-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: `${settings.secondary_color}20` }}>
+                <Feature2Icon className="h-8 w-8" style={{ color: settings.secondary_color }} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Qualité garantie</h3>
+              <h3 className="text-xl font-semibold mb-2">{settings.feature_2_title}</h3>
               <p className="text-gray-600">
-                Tous nos partenaires sont soigneusement sélectionnés pour leur excellence
+                {settings.feature_2_description}
               </p>
             </div>
-            
+
             <div className="text-center p-6">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-8 w-8 text-purple-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: `${settings.accent_color}20` }}>
+                <Feature3Icon className="h-8 w-8" style={{ color: settings.accent_color }} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Avantages exclusifs</h3>
+              <h3 className="text-xl font-semibold mb-2">{settings.feature_3_title}</h3>
               <p className="text-gray-600">
-                Bénéficiez de réductions et d'offres spéciales réservées aux membres
+                {settings.feature_3_description}
               </p>
             </div>
           </div>
@@ -180,40 +253,41 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link
               to="/partners"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center"
+              className="text-white px-8 py-3 rounded-lg font-semibold transition-colors inline-flex items-center"
+              style={{ backgroundColor: settings.primary_color }}
             >
               Voir tous nos partenaires
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <Icons.ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-blue-600 text-white">
+      <section className="py-20 text-white" style={{ backgroundColor: settings.primary_color }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
               <div className="flex items-center justify-center mb-4">
-                <Users className="h-12 w-12" />
+                <Icons.Users className="h-12 w-12" />
               </div>
-              <div className="text-4xl font-bold mb-2">10,000+</div>
+              <div className="text-4xl font-bold mb-2">{settings.stats_members}</div>
               <div className="text-xl">Membres actifs</div>
             </div>
-            
+
             <div>
               <div className="flex items-center justify-center mb-4">
-                <ShoppingBag className="h-12 w-12" />
+                <Icons.ShoppingBag className="h-12 w-12" />
               </div>
-              <div className="text-4xl font-bold mb-2">500+</div>
+              <div className="text-4xl font-bold mb-2">{settings.stats_partners}</div>
               <div className="text-xl">Partenaires</div>
             </div>
-            
+
             <div>
               <div className="flex items-center justify-center mb-4">
-                <Star className="h-12 w-12" />
+                <Icons.Star className="h-12 w-12" />
               </div>
-              <div className="text-4xl font-bold mb-2">4.9/5</div>
+              <div className="text-4xl font-bold mb-2">{settings.stats_satisfaction}</div>
               <div className="text-xl">Satisfaction client</div>
             </div>
           </div>
@@ -225,44 +299,41 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Contactez-nous
+              {settings.contact_title}
             </h2>
             <p className="text-xl text-gray-600">
-              Une question ? Notre équipe est là pour vous aider
+              {settings.contact_description}
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="h-8 w-8 text-blue-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: `${settings.primary_color}20` }}>
+                <Icons.MapPin className="h-8 w-8" style={{ color: settings.primary_color }} />
               </div>
               <h3 className="text-xl font-semibold mb-2">Adresse</h3>
-              <p className="text-gray-600">
-                123 Rue de l'Innovation<br />
-                75001 Paris, France
-              </p>
+              <p className="text-gray-600" dangerouslySetInnerHTML={{ __html: settings.contact_address.replace(/\n/g, '<br />') }} />
             </div>
-            
+
             <div className="text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone className="h-8 w-8 text-green-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: `${settings.secondary_color}20` }}>
+                <Icons.Phone className="h-8 w-8" style={{ color: settings.secondary_color }} />
               </div>
               <h3 className="text-xl font-semibold mb-2">Téléphone</h3>
               <p className="text-gray-600">
-                +33 1 23 45 67 89<br />
-                Lun-Ven 9h-18h
+                {settings.contact_phone}<br />
+                {settings.contact_hours}
               </p>
             </div>
-            
+
             <div className="text-center">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="h-8 w-8 text-purple-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: `${settings.accent_color}20` }}>
+                <Icons.Mail className="h-8 w-8" style={{ color: settings.accent_color }} />
               </div>
               <h3 className="text-xl font-semibold mb-2">Email</h3>
               <p className="text-gray-600">
-                contact@nowlovers.com<br />
-                support@nowlovers.com
+                {settings.contact_email}<br />
+                {settings.contact_support_email}
               </p>
             </div>
           </div>
@@ -275,13 +346,17 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <span className="ml-2 text-xl font-bold">NOW!</span>
+                {settings.logo_url ? (
+                  <img src={settings.logo_url} alt={settings.app_name} className="h-8" />
+                ) : (
+                  <span className="text-xl font-bold">{settings.app_name}</span>
+                )}
               </div>
               <p className="text-gray-400">
-                La plateforme qui connecte les amoureux des beaux produits aux meilleures boutiques.
+                {settings.footer_description}
               </p>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Liens rapides</h4>
               <ul className="space-y-2">
@@ -292,33 +367,47 @@ export default function Home() {
                 <li><a href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Compte</h4>
               <ul className="space-y-2">
                 <li><Link to="/login" className="text-gray-400 hover:text-white transition-colors">Connexion</Link></li>
                 <li><Link to="/generate-code" className="text-gray-400 hover:text-white transition-colors">Générer mon code</Link></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Mon profil</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Mes commandes</a></li>
+                <li><Link to="/dashboard" className="text-gray-400 hover:text-white transition-colors">Mon profil</Link></li>
+                <li><Link to="/dashboard" className="text-gray-400 hover:text-white transition-colors">Mes commandes</Link></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Suivez-nous</h4>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <Globe className="h-6 w-6" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <Mail className="h-6 w-6" />
-                </a>
+                {settings.social_facebook && (
+                  <a href={settings.social_facebook} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                    <Icons.Globe className="h-6 w-6" />
+                  </a>
+                )}
+                {settings.social_twitter && (
+                  <a href={settings.social_twitter} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                    <Icons.Globe className="h-6 w-6" />
+                  </a>
+                )}
+                {settings.social_instagram && (
+                  <a href={settings.social_instagram} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                    <Icons.Globe className="h-6 w-6" />
+                  </a>
+                )}
+                {settings.social_linkedin && (
+                  <a href={settings.social_linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                    <Icons.Globe className="h-6 w-6" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">
             <p className="text-gray-400">
-              © 2024 NOW!. Tous droits réservés.
+              {settings.footer_copyright}
             </p>
           </div>
         </div>

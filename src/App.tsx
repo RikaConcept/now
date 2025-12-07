@@ -18,6 +18,7 @@ import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import Partners from './pages/Partners';
+import SiteSettings from './pages/SiteSettings';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -75,6 +76,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/site-settings"
+                element={
+                  <ProtectedRoute>
+                    <SiteSettings />
                   </ProtectedRoute>
                 }
               />
