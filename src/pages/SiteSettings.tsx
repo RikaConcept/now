@@ -68,18 +68,16 @@ export default function SiteSettings() {
     setSaving(true);
     setMessage(null);
 
-    const { error } = await supabase
-      .from('site_settings')
-      .update({
-        ...settings,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', 'default');
-
-    if (error) {
-      setMessage({ type: 'error', text: error.message });
-    } else {
-      setMessage({ type: 'success', text: 'Paramètres enregistrés avec succès' });
+    try {
+      const response = await api.updateSiteSettings(settings);
+      
+      if (response.success) {
+        setMessage({ type: 'success', text: 'Paramètres enregistrés avec succès' });
+      } else {
+        setMessage({ type: 'error', text: response.message || 'Erreur lors de la sauvegarde' });
+      }
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Erreur lors de la sauvegarde' });
     }
 
     setSaving(false);
