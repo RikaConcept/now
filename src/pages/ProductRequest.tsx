@@ -95,90 +95,34 @@ export default function ProductRequest() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase
-        .from('product_requests')
-        .insert({
-          user_id: user?.id || null,
-          email,
-          phone,
-          product_name: productName,
-          best_price_found: parseFloat(bestPriceFound),
-          price_source: priceSource,
-          user_budget: parseFloat(userBudget),
-          is_member: isMember,
-          margin_donation: isMember && marginDonation ? parseFloat(marginDonation) : null,
-          status: 'pending'
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
       let imageUrl = null;
       if (imageFile) {
-        imageUrl = await uploadImage(data.id);
-        if (imageUrl) {
-          await supabase
-            .from('product_requests')
-            .update({ image_url: imageUrl })
-            .eq('id', data.id);
-        }
+        imageUrl = await uploadImage('temp');
       }
 
-      await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          phone,
-          type: 'product_request_confirmed',
-          data: {
-            productName,
-            requestId: data.id
-          }
-        })
-      });
+      const requestData = {
+        email,
+        phone,
+        product_name: productName,
+        best_price_found: parseFloat(bestPriceFound),
+        price_source: priceSource,
+        user_budget: parseFloat(userBudget),
+        is_member: isMember,
+        margin_donation: isMember && marginDonation ? parseFloat(marginDonation) : null,
+        image_url: imageUrl,
+        anonymous: !user
+      };
 
-      const { data: adminUsers } = await supabase
-        .from('admin_users')
-        .select('user_id');
-
-      if (adminUsers && adminUsers.length > 0) {
-        for (const admin of adminUsers) {
-          const { data: adminData } = await supabase.auth.admin.getUserById(admin.user_id);
-          if (adminData?.user?.email) {
-            await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                email: adminData.user.email,
-                type: 'admin_product_request',
-                data: {
-                  productName,
-                  requestId: data.id,
-                  userEmail: email,
-                  userPhone: phone,
-                  bestPriceFound: parseFloat(bestPriceFound),
-                  userBudget: parseFloat(userBudget),
-                  priceSource,
-                  isMember
-                }
-              })
-            });
-          }
-        }
+      const response = await api.createProductRequest(requestData);
+      
+      if (response.success && response.data?.id) {
+        setRequestId(response.data.id);
+        setSubmitted(true);
+      } else {
+        throw new Error(response.message || 'Submission failed');
       }
-
-      setRequestId(data.id);
-      setSubmitted(true);
-    } catch (error) {
-      console.error('Erreur:', error);
+    } catch (error: any) {
+      console.error('Error:', error);
       alert('Erreur lors de la soumission. Veuillez réessayer.');
     } finally {
       setLoading(false);
