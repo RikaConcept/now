@@ -77,15 +77,20 @@ export default function GenerateCode() {
     try {
       let userId = user?.id;
 
+      // If not logged in, create account
       if (!user) {
-        const { error: signUpError } = await signUp(email, password);
+        const { error: signUpError } = await signUp(email, password, phone, selectedLocality);
         if (signUpError) {
           setError(signUpError.message);
           setLoading(false);
           return;
         }
-        const { data: { user: newUser } } = await supabase.auth.getUser();
-        userId = newUser?.id;
+        
+        // Get the new user info
+        const userResponse = await api.getCurrentUser();
+        if (userResponse.success && userResponse.data?.user) {
+          userId = userResponse.data.user.id;
+        }
       }
 
       if (!userId) {
@@ -94,16 +99,16 @@ export default function GenerateCode() {
         return;
       }
 
-      const { data: existingMember } = await supabase
-        .from('members')
-        .select('code')
-        .eq('id', userId)
-        .maybeSingle();
-
-      if (existingMember) {
-        setGeneratedCode(existingMember.code);
-        setLoading(false);
-        return;
+      // Get member to check if code exists
+      try {
+        const memberResponse = await api.getMember();
+        if (memberResponse.success && memberResponse.data?.code) {
+          setGeneratedCode(memberResponse.data.code);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        // Member doesn't exist yet, continue with creation
       }
 
       const locality = localities.find(l => l.id === selectedLocality);
@@ -113,64 +118,22 @@ export default function GenerateCode() {
         return;
       }
 
-      const newMemberCount = locality.member_count + 1;
-      const code = `${locality.code_prefix}-${String(newMemberCount).padStart(6, '0')}`;
+      // The registration process creates the member automatically
+      // Just get the member info
+      const memberResponse = await api.getMember();
+      if (memberResponse.success && memberResponse.data?.code) {
+        setGeneratedCode(memberResponse.data.code);
 
-      const { error: memberError } = await supabase
-        .from('members')
-        .insert({
-          id: userId,
-          email: email || user?.email || '',
-          phone,
-          locality_id: selectedLocality,
-          code,
-          status: 'pending'
-        });
-
-      if (memberError) {
-        setError(memberError.message);
-        setLoading(false);
-        return;
+        // Redirect to shop after success
+        setTimeout(() => {
+          navigate('/shop');
+        }, 3000);
+      } else {
+        setError('Erreur lors de la génération du code');
       }
 
-      await supabase
-        .from('localities')
-        .update({ member_count: newMemberCount })
-        .eq('id', selectedLocality);
-
-      const shopUrl = `${window.location.origin}/shop`;
-
-      await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-notification`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email || user?.email,
-          phone,
-          type: 'code_generated',
-          data: {
-            code,
-            locality: locality.name,
-            advantages: [
-              'Réductions exclusives dans nos boutiques partenaires',
-              'Demandes de produits sans commission',
-              'Accès prioritaire aux nouvelles offres'
-            ],
-            shopUrl
-          }
-        })
-      });
-
-      setGeneratedCode(code);
-
-      setTimeout(() => {
-        navigate('/shop');
-      }, 3000);
-
-    } catch (err) {
-      setError('Une erreur est survenue');
+    } catch (err: any) {
+      setError(err.message || 'Une erreur est survenue');
       console.error(err);
     } finally {
       setLoading(false);
