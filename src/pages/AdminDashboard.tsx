@@ -197,27 +197,25 @@ function AdminProducts() {
   }, []);
 
   const loadProducts = async () => {
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (data) setProducts(data);
+    try {
+      const response = await api.getProducts();
+      if (response.success && response.data) {
+        setProducts(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading products:', error);
+    }
     setLoading(false);
   };
 
   const handleDeleteProduct = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
 
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      alert('Erreur lors de la suppression');
-    } else {
+    try {
+      await api.deleteProduct(id);
       loadProducts();
+    } catch (error) {
+      alert('Erreur lors de la suppression');
     }
   };
 
