@@ -48,27 +48,22 @@ export default function Catalog() {
   const loadData = async () => {
     setLoading(true);
 
-    const { data: productsData } = await supabase
-      .from('products')
-      .select('*')
-      .eq('is_active', true)
-      .order('category')
-      .order('price');
+    try {
+      // Get products
+      const productsResponse = await api.getProducts();
+      if (productsResponse.success && productsResponse.data) {
+        setProducts(productsResponse.data);
+        const uniqueCategories = [...new Set(productsResponse.data.map((p: Product) => p.category))];
+        setCategories(uniqueCategories);
+      }
 
-    const { data: shopsData } = await supabase
-      .from('partner_shops')
-      .select('*')
-      .eq('is_active', true)
-      .order('name');
-
-    if (productsData) {
-      setProducts(productsData);
-      const uniqueCategories = [...new Set(productsData.map(p => p.category))];
-      setCategories(uniqueCategories);
-    }
-
-    if (shopsData) {
-      setPartnerShops(shopsData);
+      // Get partner shops
+      const shopsResponse = await api.getPartnerShops();
+      if (shopsResponse.success && shopsResponse.data) {
+        setPartnerShops(shopsResponse.data);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
     }
 
     setLoading(false);
