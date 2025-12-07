@@ -1202,21 +1202,24 @@ function AdminRequests() {
   }, []);
 
   const loadRequests = async () => {
-    const { data } = await supabase
-      .from('product_requests')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (data) setRequests(data);
+    try {
+      const response = await api.getAdminProductRequests({ limit: 100 });
+      if (response.success && response.data) {
+        setRequests(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading requests:', error);
+    }
     setLoading(false);
   };
 
   const updateStatus = async (id: string, status: string) => {
-    await supabase
-      .from('product_requests')
-      .update({ status })
-      .eq('id', id);
-    loadRequests();
+    try {
+      await api.updateProductRequest(id, status);
+      loadRequests();
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
   };
 
   if (loading) {
