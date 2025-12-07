@@ -648,12 +648,14 @@ function AdminLevels() {
   }, []);
 
   const loadLevels = async () => {
-    const { data } = await supabase
-      .from('membership_levels')
-      .select('*')
-      .order('order', { ascending: true });
-
-    if (data) setLevels(data);
+    try {
+      const response = await api.getMembershipLevels();
+      if (response.success && response.data) {
+        setLevels(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading levels:', error);
+    }
     setLoading(false);
   };
 
