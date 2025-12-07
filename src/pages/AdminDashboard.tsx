@@ -114,40 +114,46 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-gray-100 flex">
+      <aside className="w-64 bg-white shadow-lg min-h-screen fixed left-0 top-0">
+        <div className="p-6 border-b border-gray-200">
           <h1 className="text-2xl font-bold text-blue-600">NOW! Admin</h1>
+        </div>
+
+        <nav className="p-4">
+          <ul className="space-y-2">
+            {tabs.map((tab) => (
+              <li key={tab.id}>
+                <button
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
+                    activeTab === tab.id
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            Déconnexion
+            <span>Déconnexion</span>
           </button>
         </div>
-      </nav>
+      </aside>
 
-      <div className="max-w-7xl mx-auto">
-        <div className="flex gap-4 mt-6 px-4 mb-6 overflow-x-auto">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
-                activeTab === tab.id
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              {tab.icon}
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
+      <div className="flex-1 ml-64">
         {activeTab === 'overview' && (
-          <div className="px-4 pb-12">
+          <div className="p-6">
             <div className="grid md:grid-cols-4 gap-4">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-gray-600 text-sm font-medium mb-2">Membres</div>
@@ -222,7 +228,7 @@ function AdminProducts() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="mb-6">
         <button
           onClick={() => setShowForm(!showForm)}
@@ -582,7 +588,7 @@ function AdminMembers() {
   };
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
@@ -679,7 +685,7 @@ function AdminLevels() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       {editingLevel && (
         <LevelEditForm
           level={editingLevel}
@@ -741,7 +747,7 @@ function AdminOrders() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
@@ -820,7 +826,7 @@ function AdminLocations() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <div className="flex justify-between items-center mb-4">
@@ -1207,7 +1213,7 @@ function AdminRequests() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
@@ -1275,7 +1281,7 @@ function AdminReferrals() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
@@ -1356,7 +1362,7 @@ function AdminPartnerShops() {
   }
 
   return (
-    <div className="px-4 pb-12">
+    <div className="p-6">
       <div className="mb-6">
         <button
           onClick={() => setShowForm(!showForm)}
