@@ -986,15 +986,24 @@ function AddLocalityForm({ onSuccess, countries }: { onSuccess: () => void; coun
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('localities')
-        .insert({
+      const API_URL = import.meta.env.VITE_API_URL || 'https://arnowconcept.com/api';
+      const response = await fetch(`${API_URL}/localities`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        },
+        body: JSON.stringify({
           ...formData,
           member_count: 0
-        });
+        })
+      });
 
-      if (error) throw error;
-      onSuccess();
+      if (response.ok) {
+        onSuccess();
+      } else {
+        throw new Error('Failed to add locality');
+      }
     } catch (error) {
       alert('Erreur lors de l\'ajout de la localité');
     } finally {
