@@ -31,15 +31,14 @@ export default function AdminDashboard() {
   const checkAdminAccess = async () => {
     if (!user) return;
 
-    const { data } = await supabase
-      .from('admin_users')
-      .select('role')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (data) {
-      setIsAdmin(true);
-      loadStats();
+    try {
+      const response = await api.getCurrentUser();
+      if (response.success && response.data?.user?.is_admin) {
+        setIsAdmin(true);
+        loadStats();
+      }
+    } catch (error) {
+      console.error('Error checking admin access:', error);
     }
     setLoading(false);
   };
