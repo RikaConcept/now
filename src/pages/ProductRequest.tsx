@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { Package, Loader2, CheckCircle, Info, Image as ImageIcon, X } from 'lucide-react';
 
