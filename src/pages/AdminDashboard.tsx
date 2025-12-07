@@ -1348,27 +1348,36 @@ function AdminPartnerShops() {
   }, []);
 
   const loadShops = async () => {
-    const { data } = await supabase
-      .from('partner_shops')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (data) setShops(data);
+    try {
+      const response = await api.getPartnerShops();
+      if (response.success && response.data) {
+        setShops(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading shops:', error);
+    }
     setLoading(false);
   };
 
   const handleDeleteShop = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette boutique partenaire ?')) return;
 
-    const { error } = await supabase
-      .from('partner_shops')
-      .delete()
-      .eq('id', id);
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'https://arnowconcept.com/api';
+      const response = await fetch(`${API_URL}/partner-shops?id=${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+      });
 
-    if (error) {
+      if (response.ok) {
+        loadShops();
+      } else {
+        throw new Error('Failed to delete shop');
+      }
+    } catch (error) {
       alert('Erreur lors de la suppression');
-    } else {
-      loadShops();
     }
   };
 
