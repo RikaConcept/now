@@ -51,14 +51,13 @@ export default function SiteSettings() {
   }, []);
 
   const loadSettings = async () => {
-    const { data, error } = await supabase
-      .from('site_settings')
-      .select('*')
-      .eq('id', 'default')
-      .maybeSingle();
-
-    if (data) {
-      setSettings(data);
+    try {
+      const response = await api.getSiteSettings();
+      if (response.success && response.data) {
+        setSettings(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
     }
     setLoading(false);
   };
