@@ -56,5 +56,5 @@ Thumbs.db
 deploy_*.tar.gz
 deploy_*/
 
-# Supabase (no longer needed)
-supabase/.env
+# Supabase (no longer needed - migrated to MySQL)
+supabase/
