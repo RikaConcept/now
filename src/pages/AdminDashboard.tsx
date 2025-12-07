@@ -1281,12 +1281,13 @@ function AdminReferrals() {
   }, []);
 
   const loadReferrals = async () => {
-    const { data } = await supabase
-      .from('referrals')
-      .select('*, members_referrer:members!referrer_id(email), members_referred:members!referred_id(email)')
-      .order('created_at', { ascending: false });
-
-    if (data) setReferrals(data);
+    try {
+      // TODO: Add getReferrals endpoint to API
+      // For now, set empty array
+      setReferrals([]);
+    } catch (error) {
+      console.error('Error loading referrals:', error);
+    }
     setLoading(false);
   };
 
