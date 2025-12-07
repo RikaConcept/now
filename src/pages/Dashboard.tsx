@@ -64,61 +64,42 @@ export default function Dashboard() {
   const loadDashboardData = async () => {
     if (!user) return;
 
-    const { data: memberData } = await supabase
-      .from('members')
-      .select('*, localities(name)')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (memberData) {
-      setMember(memberData);
-      if (memberData.localities) {
-        setLocality({ name: memberData.localities.name });
+    try {
+      // Get member data
+      const memberResponse = await api.getMember();
+      if (memberResponse.success && memberResponse.data) {
+        setMember(memberResponse.data);
+        if (memberResponse.data.locality_name) {
+          setLocality({ name: memberResponse.data.locality_name });
+        }
       }
-    }
 
-    const { data: shopsData } = await supabase
-      .from('partner_shops')
-      .select('*')
-      .eq('is_active', true)
-      .order('category');
+      // Get partner shops
+      const shopsResponse = await api.getPartnerShops();
+      if (shopsResponse.success && shopsResponse.data) {
+        setPartnerShops(shopsResponse.data);
+      }
 
-    if (shopsData) {
-      setPartnerShops(shopsData);
-    }
+      // Get product requests
+      const requestsResponse = await api.getProductRequests();
+      if (requestsResponse.success && requestsResponse.data) {
+        setProductRequests(requestsResponse.data.slice(0, 5));
+      }
 
-    const { data: requestsData } = await supabase
-      .from('product_requests')
-      .select('id, product_name, status, created_at, best_price_found')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(5);
-
-    if (requestsData) {
-      setProductRequests(requestsData);
-    }
-
-    const { data: referralData } = await supabase
-      .from('referrals')
-      .select('id, status')
-      .eq('referrer_id', user.id);
-
-    if (referralData) {
+      // Get referral stats (TODO: Add API endpoint for referrals)
+      // For now, set default values
       setReferralStats({
-        total: referralData.length,
-        active: referralData.filter(r => r.status === 'completed').length
+        total: 0,
+        active: 0
       });
-    }
 
-    const { data: ordersData } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('member_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (ordersData) {
-      setOrders(ordersData);
+      // Get orders
+      const ordersResponse = await api.getOrders();
+      if (ordersResponse.success && ordersResponse.data) {
+        setOrders(ordersResponse.data.slice(0, 10));
+      }
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
     }
 
     setLoading(false);
