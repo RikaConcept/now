@@ -50,86 +50,73 @@ export default function Cart() {
     setLoading(true);
 
     try {
-      const session = await supabase.auth.getSession();
-      if (!session.data.session) throw new Error('No session');
-
       const totalAmount = getTotalPrice();
-      const amountInCents = Math.round(totalAmount * 100);
 
+      // Create order first
+      const orderResponse = await api.createOrder(totalAmount, paymentMethod);
+      
+      if (!orderResponse.success) {
+        throw new Error('Order creation failed');
+      }
+
+      const orderId = orderResponse.data.order_id;
+      const API_URL = import.meta.env.VITE_API_URL || 'https://arnowconcept.com/api';
+
+      // Redirect to payment gateway
       if (paymentMethod === 'paypal') {
-        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/paypal-checkout`, {
+        // Call PayPal checkout endpoint
+        const response = await fetch(`${API_URL}/checkout/paypal`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${session.data.session.access_token}`,
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
           },
           body: JSON.stringify({
-            amount: getTotalPrice().toFixed(2),
-            currency: 'EUR',
-            items: items.map(item => ({
-              name: item.name,
-              unit_amount: item.price.toFixed(2),
-              quantity: item.quantity,
-              description: item.name
-            })),
-            return_url: `${window.location.origin}/checkout-success`,
-            cancel_url: `${window.location.origin}/cart`,
-            metadata: {
-              member_id: user.id,
-              member_status: member.status
-            }
+            order_id: orderId,
+            amount: totalAmount.toFixed(2),
+            currency: 'EUR'
           })
         });
 
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || 'Payment failed');
+          throw new Error('PayPal checkout failed');
         }
 
-        const { url } = await response.json();
-
-        if (url) {
-          window.location.href = url;
+        const data = await response.json();
+        if (data.success && data.data?.approval_url) {
+          window.location.href = data.data.approval_url;
+        } else {
+          throw new Error('No approval URL received');
         }
       } else {
-        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/paystack-checkout`, {
+        // Call Paystack checkout endpoint
+        const response = await fetch(`${API_URL}/checkout/paystack`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${session.data.session.access_token}`,
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
           },
           body: JSON.stringify({
-            amount: amountInCents,
-            currency: 'XOF',
-            email: user.email,
-            items: items.map(item => ({
-              name: item.name,
-              amount: Math.round(item.price * 100),
-              quantity: item.quantity
-            })),
-            callback_url: `${window.location.origin}/checkout-success`,
-            metadata: {
-              member_id: user.id,
-              member_status: member.status
-            }
+            order_id: orderId,
+            amount: totalAmount,
+            email: user.email
           })
         });
 
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || 'Payment failed');
+          throw new Error('Paystack checkout failed');
         }
 
-        const { url } = await response.json();
-
-        if (url) {
-          window.location.href = url;
+        const data = await response.json();
+        if (data.success && data.data?.authorization_url) {
+          window.location.href = data.data.authorization_url;
+        } else {
+          throw new Error('No authorization URL received');
         }
       }
     } catch (error) {
-      console.error('Erreur de paiement:', error);
+      console.error('Payment error:', error);
       alert('Erreur lors du paiement. Veuillez réessayer.');
-    } finally {
       setLoading(false);
     }
   };
