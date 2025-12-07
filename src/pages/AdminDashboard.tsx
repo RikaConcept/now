@@ -901,12 +901,22 @@ function AddCountryForm({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('countries')
-        .insert(formData);
+      // Note: Vous devrez ajouter cette méthode à l'API ou utiliser fetch direct
+      const API_URL = import.meta.env.VITE_API_URL || 'https://arnowconcept.com/api';
+      const response = await fetch(`${API_URL}/countries`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        },
+        body: JSON.stringify(formData)
+      });
 
-      if (error) throw error;
-      onSuccess();
+      if (response.ok) {
+        onSuccess();
+      } else {
+        throw new Error('Failed to add country');
+      }
     } catch (error) {
       alert('Erreur lors de l\'ajout du pays');
     } finally {
