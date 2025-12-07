@@ -50,25 +50,19 @@ export default function GenerateCode() {
   }, [selectedCountry, localities]);
 
   const loadCountriesAndLocalities = async () => {
-    const { data: countriesData } = await supabase
-      .from('countries')
-      .select('*')
-      .order('name');
-
-    const { data: localitiesData } = await supabase
-      .from('localities')
-      .select('*')
-      .order('name');
-
-    if (countriesData) {
-      setCountries(countriesData);
-      if (countriesData.length > 0) {
-        setSelectedCountry(countriesData[0].id);
+    try {
+      // Get countries (if API endpoint exists)
+      // For now, load localities only
+      const localitiesResponse = await api.getLocalities();
+      
+      if (localitiesResponse.success && localitiesResponse.data) {
+        setLocalities(localitiesResponse.data);
+        if (localitiesResponse.data.length > 0) {
+          setSelectedLocality(localitiesResponse.data[0].id);
+        }
       }
-    }
-
-    if (localitiesData) {
-      setLocalities(localitiesData);
+    } catch (error) {
+      console.error('Error loading data:', error);
     }
   };
 
