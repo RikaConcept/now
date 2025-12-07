@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { Store, Tag, Package, LogOut, User, MapPin, Share2, Copy, Check, CreditCard } from 'lucide-react';
 import SubscriptionStatus from '../components/SubscriptionStatus';
