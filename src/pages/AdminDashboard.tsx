@@ -376,10 +376,9 @@ function ProductForm({ onSuccess, editingProduct }: { onSuccess: () => void; edi
       let finalImageUrl = formData.image_url;
 
       if (imageFile) {
-        const tempId = editingProduct?.id || crypto.randomUUID();
-        const uploadedUrl = await uploadImage(tempId);
-        if (uploadedUrl) {
-          finalImageUrl = uploadedUrl;
+        const uploadResponse = await api.uploadFile(imageFile);
+        if (uploadResponse.success && uploadResponse.data?.url) {
+          finalImageUrl = uploadResponse.data.url;
         }
       }
 
@@ -395,16 +394,9 @@ function ProductForm({ onSuccess, editingProduct }: { onSuccess: () => void; edi
       };
 
       if (editingProduct) {
-        const { error } = await supabase
-          .from('products')
-          .update(productData)
-          .eq('id', editingProduct.id);
-        if (error) throw error;
+        await api.updateProduct(editingProduct.id, productData);
       } else {
-        const { error } = await supabase
-          .from('products')
-          .insert(productData);
-        if (error) throw error;
+        await api.createProduct(productData);
       }
 
       onSuccess();
