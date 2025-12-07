@@ -31,14 +31,16 @@ export default function Cart() {
   const loadMember = async () => {
     if (!user) return;
 
-    const { data } = await supabase
-      .from('members')
-      .select('code, status')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (data) {
-      setMember(data);
+    try {
+      const response = await api.getMember();
+      if (response.success && response.data) {
+        setMember({
+          code: response.data.code,
+          status: response.data.status
+        });
+      }
+    } catch (error) {
+      console.error('Error loading member:', error);
     }
   };
 
