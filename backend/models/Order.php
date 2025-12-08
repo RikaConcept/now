@@ -29,7 +29,14 @@ class Order {
     public function getByMember($memberId, $limit = 50) {
         $sql = "SELECT * FROM orders WHERE member_id = ? ORDER BY created_at DESC LIMIT ?";
         $stmt = $this->db->query($sql, [$memberId, $limit]);
-        return $stmt->fetchAll();
+        $orders = $stmt->fetchAll();
+        
+        // Convert numeric strings to numbers
+        foreach ($orders as &$order) {
+            $order['amount'] = floatval($order['amount']);
+        }
+        
+        return $orders;
     }
     
     public function getAll($limit = 100, $offset = 0) {
@@ -39,7 +46,14 @@ class Order {
                 ORDER BY o.created_at DESC 
                 LIMIT ? OFFSET ?";
         $stmt = $this->db->query($sql, [$limit, $offset]);
-        return $stmt->fetchAll();
+        $orders = $stmt->fetchAll();
+        
+        // Convert numeric strings to numbers
+        foreach ($orders as &$order) {
+            $order['amount'] = floatval($order['amount']);
+        }
+        
+        return $orders;
     }
     
     public function updateStatus($id, $status) {
