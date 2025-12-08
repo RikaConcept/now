@@ -48,7 +48,16 @@ class Product {
         $sql .= " ORDER BY created_at DESC";
         
         $stmt = $this->db->query($sql, $params);
-        return $stmt->fetchAll();
+        $products = $stmt->fetchAll();
+        
+        // Convert numeric strings to numbers
+        foreach ($products as &$product) {
+            $product['price'] = floatval($product['price']);
+            $product['stock'] = intval($product['stock']);
+            $product['is_active'] = (bool)$product['is_active'];
+        }
+        
+        return $products;
     }
     
     public function update($id, $data) {
