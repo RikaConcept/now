@@ -14,6 +14,12 @@ if ($method === 'GET') {
         $stmt = $db->query($sql);
         $shops = $stmt->fetchAll();
         
+        // Convert numeric strings to numbers
+        foreach ($shops as &$shop) {
+            $shop['discount_percentage'] = floatval($shop['discount_percentage']);
+            $shop['is_active'] = (bool)$shop['is_active'];
+        }
+        
         Response::success($shops);
         
     } catch (Exception $e) {
