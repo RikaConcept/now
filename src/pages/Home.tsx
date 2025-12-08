@@ -390,7 +390,7 @@ export default function Home() {
                 <Icons.MapPin className="h-8 w-8" style={{ color: settings.primary_color }} />
               </div>
               <h3 className="text-xl font-semibold mb-2">Adresse</h3>
-              <p className="text-gray-600" dangerouslySetInnerHTML={{ __html: settings.contact_address.replace(/\n/g, '<br />') }} />
+              <p className="text-gray-600" dangerouslySetInnerHTML={{ __html: (settings.contact_address || '').replace(/\n/g, '<br />') }} />
             </div>
 
             <div className="text-center">
