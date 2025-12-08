@@ -1,0 +1,100 @@
+      SELECT 'Sokoto', 'SOK' UNION ALL
+      SELECT 'Osogbo', 'OSO' UNION ALL
+      SELECT 'Maiduguri', 'MAI') as t;
+
+-- Ghana - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'GH' LIMIT 1)
+FROM (SELECT 'Accra' as name, 'ACC' as code_prefix UNION ALL
+      SELECT 'Kumasi', 'KUM' UNION ALL
+      SELECT 'Tamale', 'TAM' UNION ALL
+      SELECT 'Takoradi', 'TAK' UNION ALL
+      SELECT 'Ashaiman', 'ASH' UNION ALL
+      SELECT 'Tema', 'TEM' UNION ALL
+      SELECT 'Cape Coast', 'CAP' UNION ALL
+      SELECT 'Obuasi', 'OBU' UNION ALL
+      SELECT 'Teshie', 'TES' UNION ALL
+      SELECT 'Madina', 'MAD' UNION ALL
+      SELECT 'Koforidua', 'KOF' UNION ALL
+      SELECT 'Wa', 'WAA' UNION ALL
+      SELECT 'Techiman', 'TEC' UNION ALL
+      SELECT 'Ho', 'HOO' UNION ALL
+      SELECT 'Sunyani', 'SUN' UNION ALL
+      SELECT 'Bolgatanga', 'BOL' UNION ALL
+      SELECT 'Nungua', 'NUN' UNION ALL
+      SELECT 'Lashibi', 'LAS' UNION ALL
+      SELECT 'Dome', 'DOM' UNION ALL
+      SELECT 'Winneba', 'WIN') as t;
+
+-- Autres pays avec localités principales (10-20 par pays pour ne pas alourdir)
+
+-- Allemagne - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'DE' LIMIT 1)
+FROM (SELECT 'Berlin' as name, 'BER' as code_prefix UNION ALL
+      SELECT 'Munich', 'MUN' UNION ALL
+      SELECT 'Hambourg', 'HAM' UNION ALL
+      SELECT 'Francfort', 'FRA' UNION ALL
+      SELECT 'Cologne', 'COL' UNION ALL
+      SELECT 'Stuttgart', 'STU' UNION ALL
+      SELECT 'Düsseldorf', 'DUS' UNION ALL
+      SELECT 'Dortmund', 'DOR' UNION ALL
+      SELECT 'Essen', 'ESS' UNION ALL
+      SELECT 'Leipzig', 'LEI' UNION ALL
+      SELECT 'Brême', 'BRE' UNION ALL
+      SELECT 'Dresde', 'DRE' UNION ALL
+      SELECT 'Hanovre', 'HAN' UNION ALL
+      SELECT 'Nuremberg', 'NUR' UNION ALL
+      SELECT 'Duisbourg', 'DUI' UNION ALL
+      SELECT 'Bochum', 'BOC' UNION ALL
+      SELECT 'Wuppertal', 'WUP' UNION ALL
+      SELECT 'Bielefeld', 'BIE' UNION ALL
+      SELECT 'Bonn', 'BON' UNION ALL
+      SELECT 'Münster', 'MUN') as t;
+
+-- Luxembourg - 12 localités (pays plus petit)
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'LU' LIMIT 1)
+FROM (SELECT 'Luxembourg' as name, 'LUX' as code_prefix UNION ALL
+      SELECT 'Esch-sur-Alzette', 'ESC' UNION ALL
+      SELECT 'Differdange', 'DIF' UNION ALL
+      SELECT 'Dudelange', 'DUD' UNION ALL
+      SELECT 'Ettelbruck', 'ETT' UNION ALL
+      SELECT 'Diekirch', 'DIE' UNION ALL
+      SELECT 'Wiltz', 'WIL' UNION ALL
+      SELECT 'Echternach', 'ECH' UNION ALL
+      SELECT 'Rumelange', 'RUM' UNION ALL
+      SELECT 'Grevenmacher', 'GRE' UNION ALL
+      SELECT 'Pétange', 'PET' UNION ALL
+      SELECT 'Mersch', 'MER') as t;
+
+-- Espagne - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'ES' LIMIT 1)
+FROM (SELECT 'Madrid' as name, 'MAD' as code_prefix UNION ALL
+      SELECT 'Barcelone', 'BAR' UNION ALL
+      SELECT 'Valence', 'VAL' UNION ALL
+      SELECT 'Séville', 'SEV' UNION ALL
+      SELECT 'Saragosse', 'ZAR' UNION ALL
+      SELECT 'Málaga', 'MAL' UNION ALL
+      SELECT 'Murcie', 'MUR' UNION ALL
+      SELECT 'Palma', 'PAL' UNION ALL
+      SELECT 'Las Palmas', 'LPA' UNION ALL
+      SELECT 'Bilbao', 'BIL' UNION ALL
+      SELECT 'Alicante', 'ALI' UNION ALL
+      SELECT 'Cordoue', 'COR' UNION ALL
+      SELECT 'Valladolid', 'VLL' UNION ALL
+      SELECT 'Vigo', 'VIG' UNION ALL
+      SELECT 'Gijón', 'GIJ' UNION ALL
+      SELECT 'Hospitalet', 'HOS' UNION ALL
+      SELECT 'Vitoria', 'VIT' UNION ALL
+      SELECT 'La Coruña', 'COR' UNION ALL
+      SELECT 'Grenade', 'GRE' UNION ALL
+      SELECT 'Elche', 'ELC') as t;
+
+-- Italie - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'IT' LIMIT 1)
+FROM (SELECT 'Rome' as name, 'ROM' as code_prefix UNION ALL
+      SELECT 'Milan', 'MIL' UNION ALL
+      SELECT 'Naples', 'NAP' UNION ALL

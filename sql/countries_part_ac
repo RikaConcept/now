@@ -1,0 +1,100 @@
+      SELECT 'Rufisque', 'RUF' UNION ALL
+      SELECT 'Kolda', 'KOL' UNION ALL
+      SELECT 'Sédhiou', 'SED' UNION ALL
+      SELECT 'Matam', 'MAT' UNION ALL
+      SELECT 'Kédougou', 'KED' UNION ALL
+      SELECT 'Richard Toll', 'RIC' UNION ALL
+      SELECT 'Touba', 'TOU' UNION ALL
+      SELECT 'Pikine', 'PIK' UNION ALL
+      SELECT 'Guédiawaye', 'GUE' UNION ALL
+      SELECT 'Fatick', 'FAT' UNION ALL
+      SELECT 'Kaffrine', 'KAF') as t;
+
+-- Bénin - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'BJ' LIMIT 1)
+FROM (SELECT 'Cotonou' as name, 'COT' as code_prefix UNION ALL
+      SELECT 'Porto-Novo', 'POR' UNION ALL
+      SELECT 'Parakou', 'PAR' UNION ALL
+      SELECT 'Abomey-Calavi', 'ABO' UNION ALL
+      SELECT 'Djougou', 'DJO' UNION ALL
+      SELECT 'Bohicon', 'BOH' UNION ALL
+      SELECT 'Kandi', 'KAN' UNION ALL
+      SELECT 'Lokossa', 'LOK' UNION ALL
+      SELECT 'Ouidah', 'OUI' UNION ALL
+      SELECT 'Abomey', 'ABM' UNION ALL
+      SELECT 'Natitingou', 'NAT' UNION ALL
+      SELECT 'Malanville', 'MAL' UNION ALL
+      SELECT 'Savé', 'SAV' UNION ALL
+      SELECT 'Pobé', 'POB' UNION ALL
+      SELECT 'Kétou', 'KET' UNION ALL
+      SELECT 'Sakété', 'SAK' UNION ALL
+      SELECT 'Come', 'COM' UNION ALL
+      SELECT 'Nikki', 'NIK' UNION ALL
+      SELECT 'Savalou', 'SAL' UNION ALL
+      SELECT 'Bembèrèkè', 'BEM') as t;
+
+-- Togo - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'TG' LIMIT 1)
+FROM (SELECT 'Lomé' as name, 'LOM' as code_prefix UNION ALL
+      SELECT 'Sokodé', 'SOK' UNION ALL
+      SELECT 'Kara', 'KAR' UNION ALL
+      SELECT 'Atakpamé', 'ATA' UNION ALL
+      SELECT 'Kpalimé', 'KPA' UNION ALL
+      SELECT 'Dapaong', 'DAP' UNION ALL
+      SELECT 'Tsévié', 'TSE' UNION ALL
+      SELECT 'Notsé', 'NOT' UNION ALL
+      SELECT 'Aného', 'ANE' UNION ALL
+      SELECT 'Mango', 'MAN' UNION ALL
+      SELECT 'Bassar', 'BAS' UNION ALL
+      SELECT 'Vogan', 'VOG' UNION ALL
+      SELECT 'Tabligbo', 'TAB' UNION ALL
+      SELECT 'Tchamba', 'TCH' UNION ALL
+      SELECT 'Sotouboua', 'SOT' UNION ALL
+      SELECT 'Bafilo', 'BAF' UNION ALL
+      SELECT 'Niamtougou', 'NIA' UNION ALL
+      SELECT 'Kandé', 'KND' UNION ALL
+      SELECT 'Badou', 'BAD' UNION ALL
+      SELECT 'Amlamé', 'AML') as t;
+
+-- Burkina Faso - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'BF' LIMIT 1)
+FROM (SELECT 'Ouagadougou' as name, 'OUA' as code_prefix UNION ALL
+      SELECT 'Bobo-Dioulasso', 'BOB' UNION ALL
+      SELECT 'Koudougou', 'KOU' UNION ALL
+      SELECT 'Ouahigouya', 'OHI' UNION ALL
+      SELECT 'Banfora', 'BAN' UNION ALL
+      SELECT 'Dédougou', 'DED' UNION ALL
+      SELECT 'Kaya', 'KAY' UNION ALL
+      SELECT 'Tenkodogo', 'TEN' UNION ALL
+      SELECT 'Fada N\'Gourma', 'FAD' UNION ALL
+      SELECT 'Houndé', 'HOU' UNION ALL
+      SELECT 'Réo', 'REO' UNION ALL
+      SELECT 'Manga', 'MAN' UNION ALL
+      SELECT 'Dori', 'DOR' UNION ALL
+      SELECT 'Gaoua', 'GAO' UNION ALL
+      SELECT 'Ziniaré', 'ZIN' UNION ALL
+      SELECT 'Po', 'POO' UNION ALL
+      SELECT 'Djibo', 'DJI' UNION ALL
+      SELECT 'Nouna', 'NOU' UNION ALL
+      SELECT 'Bogandé', 'BOG' UNION ALL
+      SELECT 'Kongoussi', 'KON') as t;
+
+-- Mali - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'ML' LIMIT 1)
+FROM (SELECT 'Bamako' as name, 'BAM' as code_prefix UNION ALL
+      SELECT 'Sikasso', 'SIK' UNION ALL
+      SELECT 'Mopti', 'MOP' UNION ALL
+      SELECT 'Koutiala', 'KOU' UNION ALL
+      SELECT 'Ségou', 'SEG' UNION ALL
+      SELECT 'Kayes', 'KAY' UNION ALL
+      SELECT 'Gao', 'GAO' UNION ALL
+      SELECT 'Tombouctou', 'TOM' UNION ALL
+      SELECT 'Kati', 'KAT' UNION ALL
+      SELECT 'Koulikoro', 'KLI' UNION ALL
+      SELECT 'San', 'SAN' UNION ALL
+      SELECT 'Markala', 'MAR' UNION ALL
+      SELECT 'Kolokani', 'KOL' UNION ALL

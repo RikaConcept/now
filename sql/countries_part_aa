@@ -1,0 +1,100 @@
+-- Insertion complète des pays et localités
+-- Basé sur les captures d'écran fournies
+
+-- Supprimer les données existantes
+DELETE FROM localities;
+DELETE FROM countries;
+
+-- Insérer tous les pays
+INSERT INTO countries (id, name, code, flag_emoji) VALUES
+(UUID(), 'Afrique du Sud', 'ZA', '🇿🇦'),
+(UUID(), 'Allemagne', 'DE', '🇩🇪'),
+(UUID(), 'Argentine', 'AR', '🇦🇷'),
+(UUID(), 'Belgique', 'BE', '🇧🇪'),
+(UUID(), 'Bénin', 'BJ', '🇧🇯'),
+(UUID(), 'Brésil', 'BR', '🇧🇷'),
+(UUID(), 'Burkina Faso', 'BF', '🇧🇫'),
+(UUID(), 'Cameroun', 'CM', '🇨🇲'),
+(UUID(), 'Canada', 'CA', '🇨🇦'),
+(UUID(), 'Chine', 'CN', '🇨🇳'),
+(UUID(), 'Côte d\'Ivoire', 'CI', '🇨🇮'),
+(UUID(), 'Égypte', 'EG', '🇪🇬'),
+(UUID(), 'Espagne', 'ES', '🇪🇸'),
+(UUID(), 'États-Unis', 'US', '🇺🇸'),
+(UUID(), 'France', 'FR', '🇫🇷'),
+(UUID(), 'Gabon', 'GA', '🇬🇦'),
+(UUID(), 'Ghana', 'GH', '🇬🇭'),
+(UUID(), 'Israël', 'IL', '🇮🇱'),
+(UUID(), 'Italie', 'IT', '🇮🇹'),
+(UUID(), 'Japon', 'JP', '🇯🇵'),
+(UUID(), 'Luxembourg', 'LU', '🇱🇺'),
+(UUID(), 'Madagascar', 'MG', '🇲🇬'),
+(UUID(), 'Mali', 'ML', '🇲🇱'),
+(UUID(), 'Maroc', 'MA', '🇲🇦'),
+(UUID(), 'Mexique', 'MX', '🇲🇽'),
+(UUID(), 'Nigeria', 'NG', '🇳🇬'),
+(UUID(), 'Pays-Bas', 'NL', '🇳🇱'),
+(UUID(), 'Portugal', 'PT', '🇵🇹'),
+(UUID(), 'RDC', 'CD', '🇨🇩'),
+(UUID(), 'Royaume-Uni', 'GB', '🇬🇧'),
+(UUID(), 'Russie', 'RU', '🇷🇺'),
+(UUID(), 'Sénégal', 'SN', '🇸🇳'),
+(UUID(), 'Suisse', 'CH', '🇨🇭'),
+(UUID(), 'Togo', 'TG', '🇹🇬');
+
+-- France - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id) 
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'FR' LIMIT 1)
+FROM (SELECT 'Paris' as name, 'PAR' as code_prefix UNION ALL
+      SELECT 'Lyon', 'LYO' UNION ALL
+      SELECT 'Marseille', 'MAR' UNION ALL
+      SELECT 'Toulouse', 'TOU' UNION ALL
+      SELECT 'Nice', 'NIC' UNION ALL
+      SELECT 'Bordeaux', 'BOR' UNION ALL
+      SELECT 'Lille', 'LIL' UNION ALL
+      SELECT 'Nantes', 'NAN' UNION ALL
+      SELECT 'Strasbourg', 'STR' UNION ALL
+      SELECT 'Rennes', 'REN' UNION ALL
+      SELECT 'Montpellier', 'MON' UNION ALL
+      SELECT 'Reims', 'REI' UNION ALL
+      SELECT 'Le Havre', 'LEH' UNION ALL
+      SELECT 'Saint-Étienne', 'STE' UNION ALL
+      SELECT 'Toulon', 'TLN' UNION ALL
+      SELECT 'Grenoble', 'GRE' UNION ALL
+      SELECT 'Dijon', 'DIJ' UNION ALL
+      SELECT 'Angers', 'ANG' UNION ALL
+      SELECT 'Nîmes', 'NIM' UNION ALL
+      SELECT 'Villeurbanne', 'VIL') as t;
+
+-- Belgique - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'BE' LIMIT 1)
+FROM (SELECT 'Bruxelles' as name, 'BRU' as code_prefix UNION ALL
+      SELECT 'Anvers', 'ANV' UNION ALL
+      SELECT 'Gand', 'GAN' UNION ALL
+      SELECT 'Charleroi', 'CHA' UNION ALL
+      SELECT 'Liège', 'LIE' UNION ALL
+      SELECT 'Bruges', 'BRG' UNION ALL
+      SELECT 'Namur', 'NAM' UNION ALL
+      SELECT 'Louvain', 'LOU' UNION ALL
+      SELECT 'Mons', 'MON' UNION ALL
+      SELECT 'Malines', 'MAL' UNION ALL
+      SELECT 'Aalst', 'AAL' UNION ALL
+      SELECT 'Courtrai', 'COU' UNION ALL
+      SELECT 'Hasselt', 'HAS' UNION ALL
+      SELECT 'Ostende', 'OST' UNION ALL
+      SELECT 'Genk', 'GEN' UNION ALL
+      SELECT 'Seraing', 'SER' UNION ALL
+      SELECT 'Tournai', 'TRN' UNION ALL
+      SELECT 'Mouscron', 'MOU' UNION ALL
+      SELECT 'Verviers', 'VER' UNION ALL
+      SELECT 'Dendermonde', 'DEN') as t;
+
+-- Suisse - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'CH' LIMIT 1)
+FROM (SELECT 'Zurich' as name, 'ZUR' as code_prefix UNION ALL
+      SELECT 'Genève', 'GEN' UNION ALL
+      SELECT 'Bâle', 'BAS' UNION ALL
+      SELECT 'Lausanne', 'LAU' UNION ALL
+      SELECT 'Berne', 'BER' UNION ALL

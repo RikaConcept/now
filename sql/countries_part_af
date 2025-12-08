@@ -1,0 +1,65 @@
+      SELECT 'Turin', 'TUR' UNION ALL
+      SELECT 'Palerme', 'PAL' UNION ALL
+      SELECT 'Gênes', 'GEN' UNION ALL
+      SELECT 'Bologne', 'BOL' UNION ALL
+      SELECT 'Florence', 'FLO' UNION ALL
+      SELECT 'Bari', 'BAR' UNION ALL
+      SELECT 'Catane', 'CAT' UNION ALL
+      SELECT 'Venise', 'VEN' UNION ALL
+      SELECT 'Vérone', 'VER' UNION ALL
+      SELECT 'Messine', 'MES' UNION ALL
+      SELECT 'Padoue', 'PAD' UNION ALL
+      SELECT 'Trieste', 'TRI' UNION ALL
+      SELECT 'Brescia', 'BRE' UNION ALL
+      SELECT 'Parme', 'PAR' UNION ALL
+      SELECT 'Modène', 'MOD' UNION ALL
+      SELECT 'Reggio Calabria', 'REG' UNION ALL
+      SELECT 'Pérouse', 'PER') as t;
+
+-- Portugal - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'PT' LIMIT 1)
+FROM (SELECT 'Lisbonne' as name, 'LIS' as code_prefix UNION ALL
+      SELECT 'Porto', 'POR' UNION ALL
+      SELECT 'Braga', 'BRA' UNION ALL
+      SELECT 'Amadora', 'AMA' UNION ALL
+      SELECT 'Setúbal', 'SET' UNION ALL
+      SELECT 'Coimbra', 'COI' UNION ALL
+      SELECT 'Funchal', 'FUN' UNION ALL
+      SELECT 'Almada', 'ALM' UNION ALL
+      SELECT 'Queluz', 'QUE' UNION ALL
+      SELECT 'Évora', 'EVO' UNION ALL
+      SELECT 'Rio Tinto', 'RIO' UNION ALL
+      SELECT 'Faro', 'FAR' UNION ALL
+      SELECT 'Aveiro', 'AVE' UNION ALL
+      SELECT 'Viseu', 'VIS' UNION ALL
+      SELECT 'Guimarães', 'GUI' UNION ALL
+      SELECT 'Leiria', 'LEI' UNION ALL
+      SELECT 'Vila Nova', 'VNO' UNION ALL
+      SELECT 'Portimão', 'PTM' UNION ALL
+      SELECT 'Santarém', 'SAN' UNION ALL
+      SELECT 'Beja', 'BEJ') as t;
+
+-- Royaume-Uni - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'GB' LIMIT 1)
+FROM (SELECT 'Londres' as name, 'LON' as code_prefix UNION ALL
+      SELECT 'Birmingham', 'BIR' UNION ALL
+      SELECT 'Manchester', 'MAN' UNION ALL
+      SELECT 'Glasgow', 'GLA' UNION ALL
+      SELECT 'Liverpool', 'LIV' UNION ALL
+      SELECT 'Leeds', 'LEE' UNION ALL
+      SELECT 'Sheffield', 'SHE' UNION ALL
+      SELECT 'Édimbourg', 'EDI' UNION ALL
+      SELECT 'Bristol', 'BRI' UNION ALL
+      SELECT 'Cardiff', 'CAR' UNION ALL
+      SELECT 'Leicester', 'LEI' UNION ALL
+      SELECT 'Coventry', 'COV' UNION ALL
+      SELECT 'Bradford', 'BRA' UNION ALL
+      SELECT 'Belfast', 'BEL' UNION ALL
+      SELECT 'Nottingham', 'NOT' UNION ALL
+      SELECT 'Newcastle', 'NEW' UNION ALL
+      SELECT 'Plymouth', 'PLY' UNION ALL
+      SELECT 'Southampton', 'SOU' UNION ALL
+      SELECT 'Reading', 'REA' UNION ALL
+      SELECT 'Derby', 'DER') as t;

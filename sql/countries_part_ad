@@ -1,0 +1,100 @@
+      SELECT 'Djenné', 'DJE' UNION ALL
+      SELECT 'Bandiagara', 'BAN' UNION ALL
+      SELECT 'Kidal', 'KID' UNION ALL
+      SELECT 'Nioro', 'NIO' UNION ALL
+      SELECT 'Bougouni', 'BOU' UNION ALL
+      SELECT 'Yorosso', 'YOR' UNION ALL
+      SELECT 'Kangaba', 'KAN') as t;
+
+-- Gabon - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'GA' LIMIT 1)
+FROM (SELECT 'Libreville' as name, 'LIB' as code_prefix UNION ALL
+      SELECT 'Port-Gentil', 'PGE' UNION ALL
+      SELECT 'Franceville', 'FRA' UNION ALL
+      SELECT 'Oyem', 'OYE' UNION ALL
+      SELECT 'Moanda', 'MOA' UNION ALL
+      SELECT 'Mouila', 'MOU' UNION ALL
+      SELECT 'Lambaréné', 'LAM' UNION ALL
+      SELECT 'Tchibanga', 'TCH' UNION ALL
+      SELECT 'Koulamoutou', 'KOU' UNION ALL
+      SELECT 'Makokou', 'MAK' UNION ALL
+      SELECT 'Bitam', 'BIT' UNION ALL
+      SELECT 'Gamba', 'GAM' UNION ALL
+      SELECT 'Ntoum', 'NTO' UNION ALL
+      SELECT 'Omboué', 'OMB' UNION ALL
+      SELECT 'Mounana', 'MNA' UNION ALL
+      SELECT 'Akieni', 'AKI' UNION ALL
+      SELECT 'Lastoursville', 'LAS' UNION ALL
+      SELECT 'Fougamou', 'FOU' UNION ALL
+      SELECT 'Mimongo', 'MIM' UNION ALL
+      SELECT 'Mayumba', 'MAY') as t;
+
+-- RDC (République Démocratique du Congo) - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'CD' LIMIT 1)
+FROM (SELECT 'Kinshasa' as name, 'KIN' as code_prefix UNION ALL
+      SELECT 'Lubumbashi', 'LUB' UNION ALL
+      SELECT 'Mbuji-Mayi', 'MBU' UNION ALL
+      SELECT 'Kananga', 'KAN' UNION ALL
+      SELECT 'Kisangani', 'KIS' UNION ALL
+      SELECT 'Bukavu', 'BUK' UNION ALL
+      SELECT 'Goma', 'GOM' UNION ALL
+      SELECT 'Kolwezi', 'KOL' UNION ALL
+      SELECT 'Likasi', 'LIK' UNION ALL
+      SELECT 'Matadi', 'MAT' UNION ALL
+      SELECT 'Boma', 'BOM' UNION ALL
+      SELECT 'Mbandaka', 'MBA' UNION ALL
+      SELECT 'Butembo', 'BUT' UNION ALL
+      SELECT 'Uvira', 'UVI' UNION ALL
+      SELECT 'Beni', 'BEN' UNION ALL
+      SELECT 'Kikwit', 'KIK' UNION ALL
+      SELECT 'Tshikapa', 'TSH' UNION ALL
+      SELECT 'Bandundu', 'BAN' UNION ALL
+      SELECT 'Gbadolite', 'GBA' UNION ALL
+      SELECT 'Gemena', 'GEM') as t;
+
+-- Maroc - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'MA' LIMIT 1)
+FROM (SELECT 'Casablanca' as name, 'CAS' as code_prefix UNION ALL
+      SELECT 'Rabat', 'RAB' UNION ALL
+      SELECT 'Fès', 'FES' UNION ALL
+      SELECT 'Marrakech', 'MAR' UNION ALL
+      SELECT 'Tanger', 'TAN' UNION ALL
+      SELECT 'Agadir', 'AGA' UNION ALL
+      SELECT 'Meknès', 'MEK' UNION ALL
+      SELECT 'Oujda', 'OUJ' UNION ALL
+      SELECT 'Kénitra', 'KEN' UNION ALL
+      SELECT 'Tétouan', 'TET' UNION ALL
+      SELECT 'Salé', 'SAL' UNION ALL
+      SELECT 'Safi', 'SAF' UNION ALL
+      SELECT 'Mohammedia', 'MOH' UNION ALL
+      SELECT 'El Jadida', 'ELJ' UNION ALL
+      SELECT 'Khouribga', 'KHO' UNION ALL
+      SELECT 'Béni Mellal', 'BEN' UNION ALL
+      SELECT 'Nador', 'NAD' UNION ALL
+      SELECT 'Taza', 'TAZ' UNION ALL
+      SELECT 'Settat', 'SET' UNION ALL
+      SELECT 'Errachidia', 'ERR') as t;
+
+-- Nigeria - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'NG' LIMIT 1)
+FROM (SELECT 'Lagos' as name, 'LAG' as code_prefix UNION ALL
+      SELECT 'Abuja', 'ABU' UNION ALL
+      SELECT 'Kano', 'KAN' UNION ALL
+      SELECT 'Ibadan', 'IBA' UNION ALL
+      SELECT 'Port Harcourt', 'PHC' UNION ALL
+      SELECT 'Benin City', 'BEN' UNION ALL
+      SELECT 'Kaduna', 'KAD' UNION ALL
+      SELECT 'Enugu', 'ENU' UNION ALL
+      SELECT 'Zaria', 'ZAR' UNION ALL
+      SELECT 'Warri', 'WAR' UNION ALL
+      SELECT 'Ilorin', 'ILO' UNION ALL
+      SELECT 'Jos', 'JOS' UNION ALL
+      SELECT 'Aba', 'ABA' UNION ALL
+      SELECT 'Calabar', 'CAL' UNION ALL
+      SELECT 'Akure', 'AKU' UNION ALL
+      SELECT 'Abeokuta', 'ABE' UNION ALL
+      SELECT 'Onitsha', 'ONI' UNION ALL

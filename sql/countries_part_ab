@@ -1,0 +1,100 @@
+      SELECT 'Winterthur', 'WIN' UNION ALL
+      SELECT 'Lucerne', 'LUC' UNION ALL
+      SELECT 'Saint-Gall', 'STG' UNION ALL
+      SELECT 'Lugano', 'LUG' UNION ALL
+      SELECT 'Bienne', 'BIE' UNION ALL
+      SELECT 'Thoune', 'THO' UNION ALL
+      SELECT 'Köniz', 'KON' UNION ALL
+      SELECT 'La Chaux-de-Fonds', 'CDF' UNION ALL
+      SELECT 'Fribourg', 'FRI' UNION ALL
+      SELECT 'Schaffhouse', 'SCH' UNION ALL
+      SELECT 'Vernier', 'VRN' UNION ALL
+      SELECT 'Neuchâtel', 'NEU' UNION ALL
+      SELECT 'Sion', 'SIO' UNION ALL
+      SELECT 'Nyon', 'NYO' UNION ALL
+      SELECT 'Montreux', 'MTX') as t;
+
+-- Canada - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'CA' LIMIT 1)
+FROM (SELECT 'Montréal' as name, 'MTL' as code_prefix UNION ALL
+      SELECT 'Toronto', 'TOR' UNION ALL
+      SELECT 'Vancouver', 'VAN' UNION ALL
+      SELECT 'Calgary', 'CAL' UNION ALL
+      SELECT 'Ottawa', 'OTT' UNION ALL
+      SELECT 'Edmonton', 'EDM' UNION ALL
+      SELECT 'Québec', 'QUE' UNION ALL
+      SELECT 'Winnipeg', 'WIN' UNION ALL
+      SELECT 'Hamilton', 'HAM' UNION ALL
+      SELECT 'Kitchener', 'KIT' UNION ALL
+      SELECT 'London', 'LON' UNION ALL
+      SELECT 'Victoria', 'VIC' UNION ALL
+      SELECT 'Halifax', 'HAL' UNION ALL
+      SELECT 'Oshawa', 'OSH' UNION ALL
+      SELECT 'Windsor', 'WND' UNION ALL
+      SELECT 'Saskatoon', 'SAS' UNION ALL
+      SELECT 'Regina', 'REG' UNION ALL
+      SELECT 'Sherbrooke', 'SHE' UNION ALL
+      SELECT 'Gatineau', 'GAT' UNION ALL
+      SELECT 'Laval', 'LAV') as t;
+
+-- Côte d'Ivoire - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'CI' LIMIT 1)
+FROM (SELECT 'Abidjan' as name, 'ABI' as code_prefix UNION ALL
+      SELECT 'Bouaké', 'BOU' UNION ALL
+      SELECT 'Daloa', 'DAL' UNION ALL
+      SELECT 'San-Pédro', 'SAN' UNION ALL
+      SELECT 'Yamoussoukro', 'YAM' UNION ALL
+      SELECT 'Korhogo', 'KOR' UNION ALL
+      SELECT 'Man', 'MAN' UNION ALL
+      SELECT 'Divo', 'DIV' UNION ALL
+      SELECT 'Gagnoa', 'GAG' UNION ALL
+      SELECT 'Soubré', 'SOU' UNION ALL
+      SELECT 'Abengourou', 'ABE' UNION ALL
+      SELECT 'Agboville', 'AGB' UNION ALL
+      SELECT 'Grand-Bassam', 'GBA' UNION ALL
+      SELECT 'Bondoukou', 'BON' UNION ALL
+      SELECT 'Odienné', 'ODI' UNION ALL
+      SELECT 'Séguéla', 'SEG' UNION ALL
+      SELECT 'Dabou', 'DAB' UNION ALL
+      SELECT 'Issia', 'ISS' UNION ALL
+      SELECT 'Adzopé', 'ADZ' UNION ALL
+      SELECT 'Sassandra', 'SAS') as t;
+
+-- Cameroun - 20 localités
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'CM' LIMIT 1)
+FROM (SELECT 'Yaoundé' as name, 'YAO' as code_prefix UNION ALL
+      SELECT 'Douala', 'DLA' UNION ALL
+      SELECT 'Garoua', 'GAR' UNION ALL
+      SELECT 'Bafoussam', 'BAF' UNION ALL
+      SELECT 'Bamenda', 'BAM' UNION ALL
+      SELECT 'Maroua', 'MAR' UNION ALL
+      SELECT 'Nkongsamba', 'NKO' UNION ALL
+      SELECT 'Ngaoundéré', 'NGA' UNION ALL
+      SELECT 'Bertoua', 'BER' UNION ALL
+      SELECT 'Limbé', 'LIM' UNION ALL
+      SELECT 'Edéa', 'EDE' UNION ALL
+      SELECT 'Kumba', 'KUM' UNION ALL
+      SELECT 'Kribi', 'KRI' UNION ALL
+      SELECT 'Buea', 'BUE' UNION ALL
+      SELECT 'Dschang', 'DSC' UNION ALL
+      SELECT 'Ebolowa', 'EBO' UNION ALL
+      SELECT 'Foumban', 'FOU' UNION ALL
+      SELECT 'Mbouda', 'MBO' UNION ALL
+      SELECT 'Sangmélima', 'SAN' UNION ALL
+      SELECT 'Bafia', 'BAI') as t;
+
+-- Sénégal - 20 localités  
+INSERT INTO localities (id, name, code_prefix, member_count, country_id)
+SELECT UUID(), name, code_prefix, 0, (SELECT id FROM countries WHERE code = 'SN' LIMIT 1)
+FROM (SELECT 'Dakar' as name, 'DAK' as code_prefix UNION ALL
+      SELECT 'Thiès', 'THI' UNION ALL
+      SELECT 'Saint-Louis', 'STL' UNION ALL
+      SELECT 'Kaolack', 'KAO' UNION ALL
+      SELECT 'Ziguinchor', 'ZIG' UNION ALL
+      SELECT 'Diourbel', 'DIO' UNION ALL
+      SELECT 'Louga', 'LOU' UNION ALL
+      SELECT 'Tambacounda', 'TAM' UNION ALL
+      SELECT 'Mbour', 'MBO' UNION ALL
