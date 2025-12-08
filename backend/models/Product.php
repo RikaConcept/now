@@ -29,7 +29,16 @@ class Product {
     public function findById($id) {
         $sql = "SELECT * FROM products WHERE id = ?";
         $stmt = $this->db->query($sql, [$id]);
-        return $stmt->fetch();
+        $product = $stmt->fetch();
+        
+        if ($product) {
+            // Convert numeric strings to numbers
+            $product['price'] = floatval($product['price']);
+            $product['stock'] = intval($product['stock']);
+            $product['is_active'] = (bool)$product['is_active'];
+        }
+        
+        return $product;
     }
     
     public function getAll($category = null, $activeOnly = true) {
