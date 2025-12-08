@@ -32,8 +32,15 @@ try {
     $existingUser = $stmt->fetch();
     
     if ($existingUser) {
-        echo "Admin user already exists!\n";
+        echo "Admin user already exists with ID: {$existingUser['id']}\n";
         $adminId = $existingUser['id'];
+        
+        // Update password in case it changed
+        $db->query(
+            "UPDATE users SET password = ? WHERE id = ?",
+            [$hashedPassword, $adminId]
+        );
+        echo "✓ Admin password updated\n";
     } else {
         // Create user
         $db->query(
