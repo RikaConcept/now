@@ -4,6 +4,14 @@
 -- Supprimer les anciennes données si elles existent
 DELETE FROM site_settings;
 
+-- Vérifier et insérer les pays s'ils n'existent pas
+INSERT IGNORE INTO countries (id, name, code, flag_emoji) VALUES
+(UUID(), 'France', 'FR', '🇫🇷'),
+(UUID(), 'Belgique', 'BE', '🇧🇪'),
+(UUID(), 'Suisse', 'CH', '🇨🇭'),
+(UUID(), 'Canada', 'CA', '🇨🇦'),
+(UUID(), 'Luxembourg', 'LU', '🇱🇺');
+
 -- Insérer les paramètres par défaut
 INSERT INTO site_settings (id, setting_key, setting_value, setting_type, created_at, updated_at) VALUES
 (UUID(), 'app_name', 'NOW!Lovers', 'text', NOW(), NOW()),
