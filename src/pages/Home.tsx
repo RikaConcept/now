@@ -77,10 +77,86 @@ export default function Home() {
       }
 
       if (settingsResponse.success && settingsResponse.data) {
+        // Si les settings existent, les utiliser
         setSettings(settingsResponse.data);
+      } else {
+        // Sinon, utiliser des valeurs par défaut
+        setSettings({
+          app_name: 'NOW!Lovers',
+          logo_url: '',
+          primary_color: '#2563eb',
+          secondary_color: '#4f46e5',
+          accent_color: '#fbbf24',
+          hero_title: 'Rejoignez NOW!Lovers',
+          hero_description: 'Découvrez une communauté de membres bénéficiant de réductions exceptionnelles',
+          why_choose_title: 'Pourquoi rejoindre NOW!Lovers ?',
+          why_choose_description: 'Des avantages exclusifs, une communauté engagée',
+          feature_1_title: 'Réductions Exclusives',
+          feature_1_description: 'Bénéficiez de réductions chez nos partenaires',
+          feature_1_icon: 'Tag',
+          feature_2_title: 'Communauté Active',
+          feature_2_description: 'Rejoignez une communauté de membres actifs',
+          feature_2_icon: 'Users',
+          feature_3_title: 'Service Personnalisé',
+          feature_3_description: 'Bénéficiez d\'un service client dédié',
+          feature_3_icon: 'Award',
+          stats_members: '1,000+',
+          stats_partners: '50+',
+          stats_satisfaction: '4.8/5',
+          contact_title: 'Contactez-nous',
+          contact_description: 'Notre équipe est à votre écoute',
+          contact_address: '123 Rue de la République\n75001 Paris',
+          contact_phone: '+33 1 23 45 67 89',
+          contact_hours: 'Lun-Ven: 9h-18h',
+          contact_email: 'contact@nowlovers.com',
+          contact_support_email: 'support@nowlovers.com',
+          footer_description: 'NOW!Lovers - La communauté qui partage les bonnes affaires',
+          footer_copyright: '© 2025 NOW!Lovers. Tous droits réservés.',
+          social_facebook: '',
+          social_twitter: '',
+          social_instagram: '',
+          social_linkedin: ''
+        });
       }
     } catch (error) {
       console.error('Error loading data:', error);
+      // Utiliser valeurs par défaut en cas d'erreur
+      setSettings({
+        app_name: 'NOW!Lovers',
+        logo_url: '',
+        primary_color: '#2563eb',
+        secondary_color: '#4f46e5',
+        accent_color: '#fbbf24',
+        hero_title: 'Rejoignez NOW!Lovers',
+        hero_description: 'Découvrez une communauté de membres',
+        why_choose_title: 'Pourquoi nous rejoindre ?',
+        why_choose_description: 'Des avantages exclusifs',
+        feature_1_title: 'Réductions',
+        feature_1_description: 'Réductions chez nos partenaires',
+        feature_1_icon: 'Tag',
+        feature_2_title: 'Communauté',
+        feature_2_description: 'Communauté active',
+        feature_2_icon: 'Users',
+        feature_3_title: 'Service',
+        feature_3_description: 'Service dédié',
+        feature_3_icon: 'Award',
+        stats_members: '1,000+',
+        stats_partners: '50+',
+        stats_satisfaction: '4.8/5',
+        contact_title: 'Contact',
+        contact_description: 'Nous sommes là',
+        contact_address: 'Paris, France',
+        contact_phone: '+33 1 23 45 67 89',
+        contact_hours: 'Lun-Ven: 9h-18h',
+        contact_email: 'contact@nowlovers.com',
+        contact_support_email: 'support@nowlovers.com',
+        footer_description: 'NOW!Lovers',
+        footer_copyright: '© 2025 NOW!Lovers',
+        social_facebook: '',
+        social_twitter: '',
+        social_instagram: '',
+        social_linkedin: ''
+      });
     }
 
     setLoading(false);
