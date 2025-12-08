@@ -24,7 +24,17 @@ class Member {
                 LEFT JOIN localities l ON m.locality_id = l.id 
                 WHERE m.id = ?";
         $stmt = $this->db->query($sql, [$id]);
-        return $stmt->fetch();
+        $member = $stmt->fetch();
+        
+        if ($member) {
+            // Convert numeric strings to numbers
+            $member['total_spent'] = floatval($member['total_spent'] ?? 0);
+            if (isset($member['level_discount'])) {
+                $member['level_discount'] = floatval($member['level_discount']);
+            }
+        }
+        
+        return $member;
     }
     
     public function findByCode($code) {
