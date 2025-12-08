@@ -50,6 +50,7 @@ try {
     
     $totalCountries = 0;
     $totalLocalities = 0;
+    $usedCodes = [];
     
     foreach ($countries as $countryName => [$code, $flag, $cities]) {
         // Insérer le pays
@@ -61,11 +62,23 @@ try {
         $totalCountries++;
         echo "✓ Pays ajouté: $countryName ($code)\n";
         
-        // Insérer les localités
+        // Insérer les localités avec codes uniques
         $cityCount = 0;
         foreach ($cities as $city) {
             $localityId = UUID::v4();
-            $codePrefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $city), 0, 3));
+            
+            // Générer un code unique en utilisant pays + ville
+            $baseCode = $code . '-' . strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $city), 0, 3));
+            $codePrefix = $baseCode;
+            $counter = 1;
+            
+            // Si le code existe déjà, ajouter un numéro
+            while (in_array($codePrefix, $usedCodes)) {
+                $codePrefix = $baseCode . $counter;
+                $counter++;
+            }
+            
+            $usedCodes[] = $codePrefix;
             
             $db->query(
                 "INSERT INTO localities (id, name, code_prefix, member_count, country_id, created_at) VALUES (?, ?, ?, 0, ?, NOW())",
