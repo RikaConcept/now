@@ -31,10 +31,8 @@ RewriteRule ^api/checkout/paystack$ backend/api/checkout/paystack.php [L,QSA]
 # File upload
 RewriteRule ^api/upload$ backend/api/upload.php [L,QSA]
 
-# Serve static assets directly from dist/
-RewriteRule ^assets/(.*)$ dist/assets/$1 [L]
-
-# Serve other static files from dist/
+# Frontend - serve React build from dist/
+# Don't rewrite if file exists (for assets, images, etc.)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/api/
@@ -57,11 +55,12 @@ RewriteRule ^(.*)$ dist/index.html [L]
     Header set Access-Control-Allow-Credentials "true"
 </IfModule>
 
-# Correct MIME types for JavaScript modules
+# Correct MIME types
 <IfModule mod_mime.c>
     AddType application/javascript .js
     AddType application/javascript .mjs
     AddType text/css .css
+    AddType application/json .json
 </IfModule>
 
 # PHP settings
