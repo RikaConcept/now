@@ -204,6 +204,14 @@ INSERT INTO membership_levels (id, name, minimum_purchases, discount_percentage,
 (UUID(), 'Gold', 500, 15, '["Tous les avantages Silver", "Réductions 15% sur les boutiques", "Accès aux ventes privées", "Bonus de parrainage +5%"]', 3, 1),
 (UUID(), 'Platinum', 2000, 20, '["Tous les avantages Gold", "Réductions 20% sur les boutiques", "Conseiller personnel", "Bonus de parrainage +10%", "Livraison gratuite"]', 4, 1);
 
+-- Insert default countries
+INSERT INTO countries (id, name, code, flag_emoji) VALUES
+(UUID(), 'France', 'FR', '🇫🇷'),
+(UUID(), 'Belgique', 'BE', '🇧🇪'),
+(UUID(), 'Suisse', 'CH', '🇨🇭'),
+(UUID(), 'Canada', 'CA', '🇨🇦'),
+(UUID(), 'Luxembourg', 'LU', '🇱🇺');
+
 -- Insert default localities
 INSERT INTO localities (id, name, code_prefix, member_count) VALUES
 (UUID(), 'Paris', 'PAR', 0),
