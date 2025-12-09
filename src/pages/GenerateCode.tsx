@@ -51,15 +51,19 @@ export default function GenerateCode() {
 
   const loadCountriesAndLocalities = async () => {
     try {
-      // Get countries (if API endpoint exists)
-      // For now, load localities only
-      const localitiesResponse = await api.getLocalities();
+      // Load countries
+      const countriesResponse = await api.getCountries();
+      if (countriesResponse.success && countriesResponse.data) {
+        setCountries(countriesResponse.data);
+        if (countriesResponse.data.length > 0) {
+          setSelectedCountry(countriesResponse.data[0].id);
+        }
+      }
       
+      // Load localities
+      const localitiesResponse = await api.getLocalities();
       if (localitiesResponse.success && localitiesResponse.data) {
         setLocalities(localitiesResponse.data);
-        if (localitiesResponse.data.length > 0) {
-          setSelectedLocality(localitiesResponse.data[0].id);
-        }
       }
     } catch (error) {
       console.error('Error loading data:', error);
