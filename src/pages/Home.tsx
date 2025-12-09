@@ -82,7 +82,7 @@ export default function Home() {
       } else {
         // Sinon, utiliser des valeurs par défaut
         setSettings({
-          app_name: 'NOW!Lovers',
+          app_name: 'NOW!CONCEPT',
           logo_url: '',
           primary_color: '#2563eb',
           secondary_color: '#4f46e5',
