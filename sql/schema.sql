@@ -36,6 +36,9 @@ CREATE TABLE countries (
     name VARCHAR(255) NOT NULL,
     code VARCHAR(10) NOT NULL UNIQUE,
     flag_emoji VARCHAR(10),
+    phone_prefix VARCHAR(10),
+    phone_format VARCHAR(50),
+    currency_code VARCHAR(10),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_code (code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
